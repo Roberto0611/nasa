@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\MeteoriteController;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+use function Pest\Laravel\json;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -24,6 +28,9 @@ Route::get('home', function () {
 Route::get('/simulation', function () {
     return Inertia::render('simulation/index');
 })->name('simulation');
+
+Route::get('getAllMeteorites', [MeteoriteController::class, 'getAllMeteorites']);
+Route::get('getMeteoriteById/{id}', [MeteoriteController::class, 'getMeteoriteById']);
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
