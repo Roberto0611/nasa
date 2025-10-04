@@ -1,0 +1,8 @@
+php
+laravel
+vite
+composer
+
+npm install react-leaflet@next
+npm install three @types/three @react-three/fiber
+npm install @react-three/drei

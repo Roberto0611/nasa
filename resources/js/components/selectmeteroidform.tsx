@@ -4,6 +4,7 @@
 import { useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'  // Validador para React Hook Form
 import { useForm } from 'react-hook-form'  // Manejo de formularios
+import { router } from '@inertiajs/react'  // Para hacer peticiones a Laravel
 import { meteroidSchema } from '../../lib/meteroidSchema'
 import type { MeteroidFormData } from '../../lib/meteroidSchema'
 import { useMeteroidContext } from '../context/MeteroidContext'  // Contexto global
@@ -106,26 +107,38 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
 
     /**
      * Manejador para el botón "Save"
-     * Guarda la configuración actual del meteorito
+     * Envía los datos del meteorito a Laravel usando Inertia
      * 
      * @param {MeteroidFormData} data - Datos validados del formulario
      */
     const onSubmitSave = async (data: MeteroidFormData) => {
         try {
-            console.log("🚀 Guardando datos del meteorito:", data)
+            console.log("🚀 Enviando datos del meteorito a Laravel:", data)
 
-            // Guardar en localStorage para persistencia
-            localStorage.setItem('meteroidData', JSON.stringify(data))
-
-            console.log("✅ Datos guardados exitosamente")
-            toast.success(`Meteoroid "${data.namemeteroid}" saved successfully!`)
-
-            // Opcional: resetear el formulario después de guardar
-            // form.reset()
+            // Enviar datos a Laravel usando Inertia
+            router.post('/meteorites/store', data, {
+                onSuccess: (page) => {
+                    console.log("✅ Datos guardados exitosamente en Laravel")
+                    
+                    // Alerta de éxito
+                    alert('¡Meteorito registrado exitosamente! ✅')
+                    toast.success(`Meteoroid "${data.namemeteroid}" saved successfully!`)
+                    
+                    // Opcional: guardar también en localStorage
+                    localStorage.setItem('meteroidData', JSON.stringify(data))
+                },
+                onError: (errors) => {
+                    console.error("❌ Error al guardar en Laravel:", errors)
+                    toast.error("Error saving meteoroid data")
+                },
+                onFinish: () => {
+                    console.log("🔄 Petición completada")
+                }
+            })
 
         } catch (error) {
-            console.error("❌ Error al guardar:", error)
-            toast.error("Error saving meteoroid data: " + (error as Error).message)
+            console.error("❌ Error inesperado:", error)
+            toast.error("Unexpected error: " + (error as Error).message)
         }
     }
 
