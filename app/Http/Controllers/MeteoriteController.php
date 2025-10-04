@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\meteoritos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use PhpParser\Node\Stmt\Foreach_;
@@ -42,6 +43,43 @@ class MeteoriteController extends Controller
         return response()->json(['error' => 'API request failed']);
     }
 
+    public function getMeteoritesNames(){
+        $apiKey = env('NASA_API_KEY', 'DEMO_KEY');
+
+        $response = Http::get('https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=', [
+            'api_key' => $apiKey
+        ]);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            $allNeos = $data['near_earth_objects'] ?? [];
+
+            // Filtrar solo los que tienen aproximaciones a la Tierra
+            $earthOrbitingNeos = array_filter($allNeos, function($neo) {
+                $closeApproaches = $neo['close_approach_data'] ?? [];
+                
+                foreach ($closeApproaches as $approach) {
+                    if (($approach['orbiting_body'] ?? '') === 'Earth') {
+                        return true;
+                    }
+                }
+                return false;
+            });
+
+            // Obtener objetos con nombre e ID de los meteoritos que orbitan la Tierra
+            $meteoriteData = array_map(function($neo) {
+                return [
+                    'id' => $neo['id'] ?? '',
+                    'name' => $neo['name'] ?? ''
+                ];
+            }, $earthOrbitingNeos);
+
+            return response()->json(array_values($meteoriteData));
+        }
+
+        return response()->json(['error' => 'API request failed']);
+    }
+
     public function getMeteoriteById($id)
     {
         $apiKey = env('NASA_API_KEY');
@@ -71,5 +109,25 @@ class MeteoriteController extends Controller
         }
         
         return response()->json(['error' => 'API request failed']);
+    }
+
+    public function store(Request $request)
+    {
+        $meteorite = new meteoritos();
+        $meteorite->name = $request->input('namemeteroid');
+        $meteorite->radius = $request->input('radiusMeteroid');
+        $meteorite->velocity = $request->input('velocity');
+        $meteorite->entry_angle = $request->input('angle');
+        $meteorite->material = $request->input('material');
+        $meteorite->save();
+
+        return back()->with('success', 'Meteorito registrado exitosamente');
+    }
+
+
+    public function getAllUserMeteorites()
+    {
+        $meteorites = meteoritos::all();
+        return response()->json($meteorites);
     }
 }

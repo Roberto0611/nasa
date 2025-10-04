@@ -25,8 +25,14 @@ Route::get('home', function () {
     return Inertia::render('public/HomePage');
 })->name('homepages');
 
-Route::get('getAllMeteorites', [MeteoriteController::class, 'getAllMeteorites']);
+// apis de NASA
+Route::get('getAllMeteorites', action: [MeteoriteController::class, 'getAllMeteorites']);
 Route::get('getMeteoriteById/{id}', [MeteoriteController::class, 'getMeteoriteById']);
+Route::get('getMeteoritesNames', action: [MeteoriteController::class, 'getMeteoritesNames']);
+
+// meteoritos user
+Route::post('meteorites/store', [MeteoriteController::class, 'store'])->name('meteorites.store');
+Route::get('getAllUserMeteorites', [MeteoriteController::class, 'getAllUserMeteorites']);
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
