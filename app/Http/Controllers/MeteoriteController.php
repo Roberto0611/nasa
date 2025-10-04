@@ -52,7 +52,7 @@ class MeteoriteController extends Controller
 
         if ($response->successful()) {
             $data = $response->json();
-            $radius = ($data['estimated_diameter']['meters']['estimated_diameter_max'] / 2)*100;
+            $radius = ($data['estimated_diameter']['meters']['estimated_diameter_min'] / 2)*100;
             $density = 3.5;
             
             # Masa = (4/3)πR³ × d. 
