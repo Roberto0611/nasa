@@ -17,6 +17,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 });
 
+Route::get('/sim', function () {
+    return Inertia::render('public/SimulationPage');
+})->name('sim');
+
+Route::get('home', function () {
+    return Inertia::render('public/HomePage');
+})->name('homepages');
+
 Route::get('getAllMeteorites', [MeteoriteController::class, 'getAllMeteorites']);
 Route::get('getMeteoriteById/{id}', [MeteoriteController::class, 'getMeteoriteById']);
 
