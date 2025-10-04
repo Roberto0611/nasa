@@ -8,7 +8,7 @@ use Inertia\Inertia;
 use function Pest\Laravel\json;
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    return Inertia::render('public/landingPage');
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
