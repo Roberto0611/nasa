@@ -18,6 +18,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('getAllMeteorites', [MeteoriteController::class, 'getAllMeteorites']);
+Route::get('getMeteoriteById/{id}', [MeteoriteController::class, 'getMeteoriteById']);
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
