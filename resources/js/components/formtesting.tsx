@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import axios from 'axios'
 import { useMeteroidContext } from '../context/MeteroidContext'
 import { Button } from "./ui/button"
 import {
@@ -37,10 +38,11 @@ type MeteoroidRecord = {
 }
 
 const FormTesting = () => {
-    const { updateMeteroidData, setLocation } = useMeteroidContext()
+    const { updateMeteroidData, setLocation, setSelectedMeteoriteId, setIsSimulating, setCraterRadius } = useMeteroidContext()
     const [nasaMeteoroidsData, setNasaMeteoroidsData] = useState<MeteoroidRecord[]>([])
     const [savedMeteoroidsData, setSavedMeteoroidsData] = useState<MeteoroidRecord[]>([])
     const [loading, setLoading] = useState(false)
+    const [selectedNasaId, setSelectedNasaId] = useState<string | null>(null)
 
     const form = useForm<any>({
         defaultValues: {
@@ -142,9 +144,38 @@ const FormTesting = () => {
         toast.success(`Location updated: ${lat.toFixed(4)}, ${lng.toFixed(4)}`)
     }
 
-    const onSubmitSimulate = (data: any) => {
+    const onSubmitSimulate = async (data: any) => {
         console.log("Simulating meteoroid impact with data:", data)
-        toast.success("Starting simulation...")
+        
+        if (!selectedNasaId) {
+            toast.error('Please select a NASA meteoroid first')
+            return
+        }
+
+        try {
+            toast.info('Calculating impact area...')
+            
+            // Llamar a la API para obtener los datos del meteorito y el cráter
+            const response = await axios.get(`/getMeteoriteById/${selectedNasaId}`)
+            const craterDiameter = response.data?.atmospheric_impact?.crater_diameter_m
+            
+            if (craterDiameter) {
+                // Calcular radio (diámetro / 2)
+                const radius = craterDiameter / 2
+                setCraterRadius(radius)
+                console.log('✅ Crater radius:', radius, 'meters')
+                toast.success('Impact area calculated!')
+            } else {
+                toast.warning('Crater data not available for this meteoroid')
+            }
+            
+            // Activar la simulación (mostrar círculos en el mapa)
+            setIsSimulating(true)
+            
+        } catch (error) {
+            console.error('❌ Error fetching meteorite data:', error)
+            toast.error('Error calculating impact area')
+        }
     }
 
     return (
@@ -166,11 +197,11 @@ const FormTesting = () => {
                                         onValueChange={(value) => {
                                             field.onChange(value)
                                             const selected = nasaMeteoroidsData.find(m => m.name === value)
-                                            if (selected) {
-                                                loadMeteoroidData(selected)
-                                                if (selected.lat && selected.lng) {
-                                                    setMapLocation(selected.lat, selected.lng)
-                                                }
+                                            if (selected && selected.id) {
+                                                // Guardar el ID del meteorito seleccionado
+                                                setSelectedNasaId(String(selected.id))
+                                                setSelectedMeteoriteId(String(selected.id))
+                                                toast.info(`NASA meteoroid selected: ${selected.name}`)
                                             }
                                         }}
                                         defaultValue={field.value}
@@ -289,7 +320,13 @@ const FormTesting = () => {
                         )}
                     />
 
-                    <Button type="button" variant="default" className="text-black border-black hover:bg-black hover:text-white">
+                    <Button 
+                        type="button" 
+                        onClick={form.handleSubmit(onSubmitSimulate)}
+                        variant="default" 
+                        className="text-black border-black hover:bg-black hover:text-white"
+                        disabled={!selectedNasaId}
+                    >
                         Simulate
                     </Button>
                 </form>

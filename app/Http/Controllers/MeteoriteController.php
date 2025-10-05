@@ -347,9 +347,16 @@ class MeteoriteController extends Controller
         $crater_energy_J = $E_remain; // energía que impacta el suelo
         $crater_diameter_m = null;
         if ($h <= 0 && $crater_energy_J > 1e12) { // si impacta
-            // relación aproximada simplificada (pi-scaling rough): D_crater ≈ k * (E / 1e15)^(1/3)
-            $k = 1000.0;
-            $crater_diameter_m = $k * pow($crater_energy_J / 1e15, 1.0/3.0);
+            // Estimación empírica realista (Melosh/Holsapple)
+            // Escala: 1e24 J ≈ 180 km de diámetro (Chicxulub)
+            $k = 1.8e3; // ajuste empírico para impactos terrestres
+            $crater_diameter_m = $k * pow($crater_energy_J / 1e21, 1.0 / 3.4);
+
+            // Clasificación rápida del impacto
+            $impact_scale = 'minor';
+            if ($crater_diameter_m > 100000) $impact_scale = 'global';
+            elseif ($crater_diameter_m > 10000) $impact_scale = 'regional';
+            elseif ($crater_diameter_m > 1000) $impact_scale = 'local';
         }
 
         return [

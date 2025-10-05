@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, useMemo, useCallback } from 'react'
+import axios from 'axios'
 import {
     MapContainer,
     TileLayer,
@@ -77,20 +78,18 @@ function DraggableMarker() {
 
 
 const MapPage = () => {
-    // NOTE: meteroid/form data will be stored in Supabase per user's request.
-    // MapPage should not read the meteroid form data from context. Use a
-    // local default for radius (or compute from DB when needed).
-    // Default simplified radius (meters) used for visualization only
-    const radiusEnergy = 100000
+    // Leer datos del contexto
+    const { location, isSimulating, craterRadius } = useMeteroidContext()
+    
+    // Usar el radio del cráter del contexto o valor por defecto
+    const radiusEnergy = craterRadius || 100000
+
     // Opciones de estilo para los círculos
     const redOptions = { color: 'red', fillColor: 'red', fillOpacity: 0.2 }
     const blackOptions = { color: 'black', fillColor: 'black', fillOpacity: 0.3 }
     const purpleOptions = { color: 'purple', fillColor: 'purple', fillOpacity: 0.1 }
 
     const mapRef = useRef(null);
-
-    // Leer la ubicación seleccionada desde el contexto
-    const { location } = useMeteroidContext()
 
     // Impact center: use selected location if available, otherwise fallback to default center
     const impactCenter: [number, number] = Array.isArray(location) && location.length === 2
@@ -125,43 +124,49 @@ const MapPage = () => {
                     url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
                 />
 
-                <LayersControl position="topleft">
-                    <LayersControl.Overlay checked name="Zona de impacto calculada">
-                        <Circle
-                            center={impactCenter}
-                            pathOptions={purpleOptions}
-                            radius={radiusEnergy * 2}
-                            bubblingMouseEvents={false}
-                        >
-                            <Popup>Radio de impacto calculado: {(radiusEnergy * 2).toFixed(0)} metros</Popup>
-                        </Circle>
-                    </LayersControl.Overlay>
-
-                    <LayersControl.Overlay checked name="Zona de destrucción severa">
-                        <Circle
-                            center={impactCenter}
-                            pathOptions={redOptions}
-                            radius={radiusEnergy}
-                            bubblingMouseEvents={false}
-                        >
-                            <Popup>Zona de destrucción severa: {(radiusEnergy).toFixed(0)} metros</Popup>
-                        </Circle>
-                    </LayersControl.Overlay>
-
-                    <LayersControl.Overlay checked name="Epicentro del impacto">
-                        <LayerGroup>
+                {/* Solo mostrar círculos de impacto si isSimulating es true */}
+                {isSimulating && (
+                    <LayersControl position="topleft">
+                        <LayersControl.Overlay checked name="Zona de impacto calculada">
                             <Circle
                                 center={impactCenter}
-                                pathOptions={blackOptions}
-                                radius={radiusEnergy / 2}
+                                pathOptions={purpleOptions}
+                                radius={radiusEnergy * 2}
                                 bubblingMouseEvents={false}
                             >
-                                <Popup>Epicentro: {(radiusEnergy / 2).toFixed(0)} metros</Popup>
+                                <Popup>Radio de impacto calculado: {(radiusEnergy * 2).toFixed(0)} metros</Popup>
                             </Circle>
-                            <DraggableMarker />
-                        </LayerGroup>
-                    </LayersControl.Overlay>
-                </LayersControl>
+                        </LayersControl.Overlay>
+
+                        <LayersControl.Overlay checked name="Zona de destrucción severa">
+                            <Circle
+                                center={impactCenter}
+                                pathOptions={redOptions}
+                                radius={radiusEnergy}
+                                bubblingMouseEvents={false}
+                            >
+                                <Popup>Zona de destrucción severa: {(radiusEnergy).toFixed(0)} metros</Popup>
+                            </Circle>
+                        </LayersControl.Overlay>
+
+                        <LayersControl.Overlay checked name="Epicentro del impacto">
+                            <LayerGroup>
+                                <Circle
+                                    center={impactCenter}
+                                    pathOptions={blackOptions}
+                                    radius={radiusEnergy / 2}
+                                    bubblingMouseEvents={false}
+                                >
+                                    <Popup>Epicentro: {(radiusEnergy / 2).toFixed(0)} metros</Popup>
+                                </Circle>
+                                <DraggableMarker />
+                            </LayerGroup>
+                        </LayersControl.Overlay>
+                    </LayersControl>
+                )}
+
+                {/* Marcador siempre visible */}
+                {!isSimulating && <DraggableMarker />}
             </MapContainer>
         </div>
     )
