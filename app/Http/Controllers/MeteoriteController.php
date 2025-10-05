@@ -43,16 +43,22 @@ class MeteoriteController extends Controller
         return response()->json(['error' => 'API request failed']);
     }
 
-    public function getMeteoritesNames(){
+    public function getMeteoritesNames(Request $request){
         $apiKey = env('NASA_API_KEY', 'DEMO_KEY');
+        $page = $request->query('page', 0); // Página por defecto es 0
 
-        $response = Http::get('https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=', [
-            'api_key' => $apiKey
+        $response = Http::get('https://api.nasa.gov/neo/rest/v1/neo/browse', [
+            'api_key' => $apiKey,
+            'page' => $page
         ]);
 
         if ($response->successful()) {
             $data = $response->json();
             $allNeos = $data['near_earth_objects'] ?? [];
+            
+            // Información de paginación de la API
+            $links = $data['links'] ?? [];
+            $page_info = $data['page'] ?? [];
 
             // Filtrar solo los que tienen aproximaciones a la Tierra
             $earthOrbitingNeos = array_filter($allNeos, function($neo) {
@@ -74,7 +80,17 @@ class MeteoriteController extends Controller
                 ];
             }, $earthOrbitingNeos);
 
-            return response()->json(array_values($meteoriteData));
+            return response()->json([
+                'data' => array_values($meteoriteData),
+                'pagination' => [
+                    'current_page' => $page_info['number'] ?? $page,
+                    'total_pages' => $page_info['total_pages'] ?? 1,
+                    'size' => $page_info['size'] ?? count($allNeos),
+                    'total_elements' => $page_info['total_elements'] ?? count($allNeos),
+                    'has_next' => isset($links['next']),
+                    'has_prev' => isset($links['prev']),
+                ]
+            ]);
         }
 
         return response()->json(['error' => 'API request failed']);
