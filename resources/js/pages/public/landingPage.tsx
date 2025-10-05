@@ -69,7 +69,7 @@ const LandingPage = () => {
                         Learn Space Science
                     </h1>
                     <p className="text-xl md:text-2xl mb-8 text-gray-300 max-w-3xl mx-auto">
-                        Master astronomy, physics, and planetary science with NASA's interactive educational platform
+                        Master astronomy, physics, and planetary science with Meteorica interactive educational platform
                     </p>
                     <div className="flex flex-col md:flex-row gap-4 justify-center">
                         <Link href="/academy">
@@ -217,11 +217,6 @@ const LandingPage = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         className="text-center mt-12"
                     >
-                        <Link href="/formulas">
-                            <button className="px-8 py-4 bg-white text-black hover:bg-gray-200 rounded-lg font-semibold transition transform hover:scale-105">
-                                Explore All Formulas
-                            </button>
-                        </Link>
                     </motion.div>
                 </div>
             </section>
