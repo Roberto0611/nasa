@@ -23,6 +23,15 @@ import {
     SelectTrigger,
     SelectValue,
 } from "./select"
+
+// IDs de toasts para controlar duplicados
+const TOAST_IDS = {
+    LOADING: 'loading-toast',
+    LOCATION: 'location-toast',
+    SIMULATION: 'simulation-toast',
+    SHARE: 'share-toast',
+    DOWNLOAD: 'download-toast',
+}
 import {
     Tooltip,
     TooltipContent,
@@ -124,10 +133,16 @@ const FormTesting = () => {
             setNasaMeteoroidsData(mappedData)
             setNasaCurrentPage(0)
             setNasaHasMore(pagination.has_next || false)
-            toast.success(`${mappedData.length} NASA meteoroids loaded`, { duration: 1000 })
+            toast.success(`${mappedData.length} NASA meteoroids loaded`, { 
+                id: TOAST_IDS.LOADING,
+                duration: 1500 
+            })
         } catch (error) {
             console.error('Error fetching NASA meteoroids:', error)
-            toast.error('Error loading NASA meteoroids', { duration: 1000 })
+            toast.error('Error loading NASA meteoroids', { 
+                id: TOAST_IDS.LOADING,
+                duration: 2000 
+            })
         } finally {
             setLoading(false)
         }
@@ -192,10 +207,16 @@ const FormTesting = () => {
             }))
 
             setSavedMeteoroidsData(mappedData)
-            toast.success(`${mappedData.length} saved meteoroids loaded`, { duration: 1000 })
+            toast.success(`${mappedData.length} saved meteoroids loaded`, { 
+                id: TOAST_IDS.LOADING,
+                duration: 1500 
+            })
         } catch (error) {
             console.error('Error fetching saved meteoroids:', error)
-            toast.error('Error loading saved meteoroids', { duration: 1000 })
+            toast.error('Error loading saved meteoroids', { 
+                id: TOAST_IDS.LOADING,
+                duration: 2000 
+            })
         } finally {
             setLoading(false)
         }
@@ -216,13 +237,19 @@ const FormTesting = () => {
             material: (meteoroid.material as 'rock' | 'iron' | 'nickel') || 'rock'
         })
 
-        toast.success(`Meteoroid loaded: ${meteoroid.name}`)
+        toast.success(`Meteoroid loaded: ${meteoroid.name}`, {
+            id: TOAST_IDS.LOADING,
+            duration: 2000
+        })
     }
 
     // Establecer ubicación en el mapa
     const setMapLocation = (lat: number, lng: number) => {
         setLocation([lat, lng])
-        toast.success(`Location updated: ${lat.toFixed(4)}, ${lng.toFixed(4)}`, { duration: 1000 })
+        toast.success(`Location updated: ${lat.toFixed(4)}, ${lng.toFixed(4)}`, { 
+            id: TOAST_IDS.LOCATION,
+            duration: 1500 
+        })
     }
 
     const onSubmitSimulate = async (data: any) => {
@@ -230,12 +257,18 @@ const FormTesting = () => {
 
         // Verificar que se haya seleccionado un meteorito (NASA o guardado)
         if (!selectedNasaId && !selectedSavedId) {
-            toast.error('Please select a meteoroid first')
+            toast.error('Please select a meteoroid first', {
+                id: TOAST_IDS.SIMULATION,
+                duration: 2000
+            })
             return
         }
 
         try {
-            toast.info('Calculating impact area...', { duration: 2000 })
+            toast.info('Calculating impact area...', { 
+                id: TOAST_IDS.SIMULATION,
+                duration: 2000 
+            })
 
             let response
             let meteoroidName
@@ -265,9 +298,15 @@ const FormTesting = () => {
                 const radius = craterDiameter / 2
                 setCraterRadius(radius)
                 console.log('✅ Crater radius:', radius, 'meters')
-                toast.success('Impact area calculated!', { duration: 2000 })
+                toast.success('Impact area calculated!', { 
+                    id: TOAST_IDS.SIMULATION,
+                    duration: 2000 
+                })
             } else {
-                toast.warning('Crater data not available for this meteoroid')
+                toast.warning('Crater data not available for this meteoroid', {
+                    id: TOAST_IDS.SIMULATION,
+                    duration: 2500
+                })
             }
 
             // Activar la simulación (mostrar círculos en el mapa)
@@ -275,7 +314,10 @@ const FormTesting = () => {
 
         } catch (error) {
             console.error('❌ Error fetching meteorite data:', error)
-            toast.error('Error calculating impact area')
+            toast.error('Error calculating impact area', {
+                id: TOAST_IDS.SIMULATION,
+                duration: 3000
+            })
         }
     }
 
@@ -291,7 +333,10 @@ const FormTesting = () => {
         setShowShareButtons(false)
         setShowInstagramGuide(false)
         form.reset()
-        toast.info('Simulation reset')
+        toast.info('Simulation reset', {
+            id: TOAST_IDS.SIMULATION,
+            duration: 1500
+        })
     }
 
     // Función para generar imagen profesional con Canvas API
@@ -514,7 +559,10 @@ const FormTesting = () => {
     const shareToWhatsApp = async () => {
         const imageBlob = await generateProfessionalImage()
         if (!imageBlob) {
-            toast.error('Error generating image')
+            toast.error('Error generating image', {
+                id: TOAST_IDS.SHARE,
+                duration: 2000
+            })
             return
         }
 
@@ -540,7 +588,10 @@ Simulated with Meteorica - NASA Space Apps Challenge
                     title: 'Meteorica - Meteorite Impact Simulation',
                     text: text
                 })
-                toast.success('Shared successfully!')
+                toast.success('Shared successfully!', {
+                    id: TOAST_IDS.SHARE,
+                    duration: 2000
+                })
                 return
             } catch (error) {
                 console.log('Web Share API failed, using fallback')
@@ -560,13 +611,19 @@ Simulated with Meteorica - NASA Space Apps Challenge
             window.open(whatsappUrl, '_blank')
         }, 500)
 
-        toast.success('Image downloaded! Opening WhatsApp...')
+        toast.success('Image downloaded! Opening WhatsApp...', {
+            id: TOAST_IDS.DOWNLOAD,
+            duration: 2500
+        })
     }
 
     const shareToTwitter = async () => {
         const imageBlob = await generateProfessionalImage()
         if (!imageBlob) {
-            toast.error('Error generating image')
+            toast.error('Error generating image', {
+                id: TOAST_IDS.SHARE,
+                duration: 2000
+            })
             return
         }
 
@@ -591,13 +648,19 @@ Simulated with Meteorica - NASA Space Apps Challenge
             window.open(twitterUrl, '_blank')
         }, 500)
 
-        toast.success('Image downloaded! Opening Twitter...')
+        toast.success('Image downloaded! Opening Twitter...', {
+            id: TOAST_IDS.DOWNLOAD,
+            duration: 2500
+        })
     }
 
     const shareToInstagram = async () => {
         const imageBlob = await generateProfessionalImage()
         if (!imageBlob) {
-            toast.error('Error generating image')
+            toast.error('Error generating image', {
+                id: TOAST_IDS.SHARE,
+                duration: 2000
+            })
             return
         }
 
@@ -628,6 +691,7 @@ Simulated with Meteorica - NASA Space Apps Challenge 🌍
             setShowInstagramGuide(true)
 
             toast.success('✅ Image downloaded & caption copied!', {
+                id: TOAST_IDS.DOWNLOAD,
                 duration: 6000
             })
 
@@ -646,14 +710,20 @@ Simulated with Meteorica - NASA Space Apps Challenge 🌍
             }, 1000)
 
         } catch (error) {
-            toast.error('Failed to copy caption')
+            toast.error('Failed to copy caption', {
+                id: TOAST_IDS.SHARE,
+                duration: 2000
+            })
         }
     }
 
     const shareToFacebook = async () => {
         const imageBlob = await generateProfessionalImage()
         if (!imageBlob) {
-            toast.error('Error generating image')
+            toast.error('Error generating image', {
+                id: TOAST_IDS.SHARE,
+                duration: 2000
+            })
             return
         }
 
@@ -683,13 +753,19 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
             window.open(fbUrl, '_blank')
         }, 500)
 
-        toast.success('Image downloaded! Opening Facebook...')
+        toast.success('Image downloaded! Opening Facebook...', {
+            id: TOAST_IDS.DOWNLOAD,
+            duration: 2500
+        })
     }
 
     const downloadImage = async () => {
         const imageBlob = await generateProfessionalImage()
         if (!imageBlob) {
-            toast.error('Error generating image')
+            toast.error('Error generating image', {
+                id: TOAST_IDS.DOWNLOAD,
+                duration: 2000
+            })
             return
         }
 
@@ -700,7 +776,10 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
         link.click()
         URL.revokeObjectURL(url)
 
-        toast.success('Professional impact card downloaded! 🎨')
+        toast.success('Professional impact card downloaded! 🎨', {
+            id: TOAST_IDS.DOWNLOAD,
+            duration: 2500
+        })
     }
 
     return (
