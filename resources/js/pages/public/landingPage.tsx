@@ -25,7 +25,9 @@ const LandingPage = () => {
             <nav className={`fixed w-full z-50 transition-all duration-300 ${scrollY > 50 ? 'bg-black/90 backdrop-blur-md border-b border-gray-700' : 'bg-transparent'}`}>
                 <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                     <div className="flex items-center space-x-2">
-                        <img src="/logo.svg" alt="NASA Logo" className="h-12 w-12" />
+                        <a href="https://www.nasa.gov" target="_blank" rel="noopener noreferrer" className="transition hover:opacity-80">
+                            <img src="https://www.nasa.gov/wp-content/themes/nasa/assets/images/nasa-logo.svg" alt="NASA Logo" className="h-12 w-12" />
+                        </a>
                         <span className="text-2xl font-bold">NASA Academy</span>
                     </div>
                     <ul className="hidden md:flex space-x-8">
@@ -37,6 +39,7 @@ const LandingPage = () => {
                                 Meteorites Database
                             </Link>
                         </li>
+                        <li><a href="#nasabot" className="hover:text-gray-300 transition">NASAbot AI</a></li>
                         <li><a href="#about" className="hover:text-gray-300 transition">About</a></li>
                         <li><a href="#contact" className="hover:text-gray-300 transition">Contact</a></li>
                     </ul>
@@ -357,46 +360,6 @@ const LandingPage = () => {
                 </div>
             </section>
 
-            {/* Learning Resources Gallery */}
-            <section id="gallery" className="py-20">
-                <div className="container mx-auto px-6">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        className="text-center mb-16"
-                    >
-                        <h2 className="text-5xl font-bold mb-4">Learning Resources</h2>
-                        <p className="text-xl text-gray-500">Interactive tools and educational materials</p>
-                    </motion.div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {[
-                            { icon: '🔭', label: 'Telescopes' },
-                            { icon: '🌍', label: 'Earth Science' },
-                            { icon: '🌙', label: 'Moon Phases' },
-                            { icon: '⭐', label: 'Star Charts' },
-                            { icon: '🛰️', label: 'Satellites' },
-                            { icon: '🌌', label: 'Galaxies' },
-                            { icon: '🚀', label: 'Rockets' },
-                            { icon: '👨‍🚀', label: 'Astronauts' }
-                        ].map((item, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: index * 0.05 }}
-                                className="aspect-square bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition group border border-gray-700 hover:border-gray-500"
-                            >
-                                <div className="w-full h-full flex flex-col items-center justify-center gap-3 group-hover:bg-gray-800/50 transition">
-                                    <span className="text-5xl">{item.icon}</span>
-                                    <span className="text-sm text-gray-600 group-hover:text-white transition font-semibold">{item.label}</span>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
             {/* About Section */}
             <section id="about" className="py-20 bg-black/50">
                 <div className="container mx-auto px-6">
@@ -428,6 +391,125 @@ const LandingPage = () => {
                                     <p className="text-gray-400">Connect with learners worldwide</p>
                                 </div>
                             </div>
+                        </motion.div>
+                    </div>
+                </div>
+            </section>
+
+            {/* NASAbot AI Assistant Section */}
+            <section id="nasabot" className="py-20 bg-black/50">
+                <div className="container mx-auto px-6">
+                    <div className="grid md:grid-cols-2 gap-12 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            className="relative"
+                        >
+                            <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 border border-gray-700 relative overflow-hidden">
+                                {/* Animated background */}
+                                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 animate-pulse"></div>
+
+                                {/* Bot illustration */}
+                                <div className="relative z-10">
+                                    <div className="text-center mb-6">
+                                        <div className="inline-block p-6 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full mb-4 border-2 border-blue-500/50 animate-pulse">
+                                            <span className="text-7xl">🤖</span>
+                                        </div>
+                                        <h3 className="text-3xl font-bold mb-2">NASAbot</h3>
+                                        <p className="text-gray-400">Powered by Google Gemini AI</p>
+                                    </div>
+
+                                    {/* Sample conversation */}
+                                    <div className="space-y-4 bg-black/30 rounded-lg p-6 backdrop-blur-sm">
+                                        <div className="flex gap-3">
+                                            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                                                👤
+                                            </div>
+                                            <div className="bg-white/10 rounded-lg px-4 py-2 max-w-xs">
+                                                <p className="text-sm">What is the speed of light?</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-3 justify-end">
+                                            <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg px-4 py-2 max-w-xs border border-blue-500/30">
+                                                <p className="text-sm">The speed of light is approximately 299,792,458 m/s...</p>
+                                            </div>
+                                            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0">
+                                                🤖
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-3">
+                                            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                                                👤
+                                            </div>
+                                            <div className="bg-white/10 rounded-lg px-4 py-2 max-w-xs">
+                                                <p className="text-sm">Tell me about asteroids</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, x: 50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                        >
+                            <span className="text-gray-400 font-semibold mb-2 block">AI ASSISTANT</span>
+                            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                                Meet NASAbot
+                            </h2>
+                            <p className="text-gray-500 text-lg mb-6">
+                                Your personal AI-powered space science tutor, available 24/7 to answer questions about astronomy,
+                                physics, planetary science, and more. Powered by Google's advanced Gemini AI.
+                            </p>
+
+                            <div className="space-y-4 mb-8">
+                                <div className="flex items-start gap-3">
+                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500/20 to-purple-500/20 flex items-center justify-center flex-shrink-0 border border-blue-500/30">
+                                        <span className="text-xl">💬</span>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold mb-1">Natural Conversations</h4>
+                                        <p className="text-gray-400 text-sm">Ask questions in plain language and get detailed, accurate answers</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500/20 to-purple-500/20 flex items-center justify-center flex-shrink-0 border border-blue-500/30">
+                                        <span className="text-xl">📚</span>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold mb-1">NASA Knowledge Base</h4>
+                                        <p className="text-gray-400 text-sm">Trained on NASA's extensive space science database</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500/20 to-purple-500/20 flex items-center justify-center flex-shrink-0 border border-blue-500/30">
+                                        <span className="text-xl">🎓</span>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold mb-1">Personalized Learning</h4>
+                                        <p className="text-gray-400 text-sm">Get explanations tailored to your knowledge level</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500/20 to-purple-500/20 flex items-center justify-center flex-shrink-0 border border-blue-500/30">
+                                        <span className="text-xl">⚡</span>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold mb-1">Instant Responses</h4>
+                                        <p className="text-gray-400 text-sm">Powered by Gemini's lightning-fast AI processing</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <Link href="/nasabot">
+                                <button className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-lg font-semibold transition transform hover:scale-105 flex items-center gap-2">
+                                    Chat with NASAbot
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                    </svg>
+                                </button>
+                            </Link>
                         </motion.div>
                     </div>
                 </div>
@@ -477,6 +559,16 @@ const LandingPage = () => {
                             <ul className="space-y-2 text-gray-500">
                                 <li><a href="#" className="hover:text-white transition">All Courses</a></li>
                                 <li><a href="/sim" className="hover:text-white transition">Asteroid Simulator</a></li>
+                                <li>
+                                    <Link href="/nasabot" className="hover:text-white transition">
+                                        NASAbot AI Assistant
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href="/meteorites" className="hover:text-white transition">
+                                        Meteorites Database
+                                    </Link>
+                                </li>
                                 <li><a href="#" className="hover:text-white transition">Certifications</a></li>
                                 <li><a href="#" className="hover:text-white transition">Study Guides</a></li>
                             </ul>

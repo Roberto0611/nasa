@@ -29,6 +29,10 @@ Route::get('meteorites', function () {
     return Inertia::render('public/MeteoritesPage');
 })->name('meteorites');
 
+Route::get('nasabot', function () {
+    return Inertia::render('public/NasaBot');
+})->name('nasabot');
+
 // apis de NASA
 Route::get('getAllMeteorites', action: [MeteoriteController::class, 'getAllMeteorites']);
 Route::get('getMeteoriteById/{id}', [MeteoriteController::class, 'getMeteoriteById']);
