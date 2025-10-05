@@ -27,20 +27,33 @@ const MeteoritesPage = () => {
     const [nasaMeteorites, setNasaMeteorites] = useState<MeteoroidRecord[]>([])
     const [savedMeteorites, setSavedMeteorites] = useState<MeteoroidRecord[]>([])
     const [loading, setLoading] = useState(true)
+    const [loadingMore, setLoadingMore] = useState(false)
     const [activeTab, setActiveTab] = useState<'nasa' | 'saved'>('nasa')
     const [searchTerm, setSearchTerm] = useState('')
+    const [currentPage, setCurrentPage] = useState(0)
+    const [hasMore, setHasMore] = useState(true)
+    const [totalPages, setTotalPages] = useState(1)
 
     useEffect(() => {
-        fetchNasaMeteorites()
+        fetchNasaMeteorites(0, true)
         fetchSavedMeteorites()
     }, [])
 
-    const fetchNasaMeteorites = async () => {
+    const fetchNasaMeteorites = async (page: number = 0, reset: boolean = false) => {
         try {
-            const response = await fetch('/getMeteoritesNames')
+            if (reset) {
+                setLoading(true)
+            } else {
+                setLoadingMore(true)
+            }
+
+            const response = await fetch(`/getMeteoritesNames?page=${page}`)
             if (!response.ok) throw new Error('Failed to fetch NASA meteorites')
 
-            const data = await response.json()
+            const result = await response.json()
+            const data = result.data || []
+            const pagination = result.pagination || {}
+
             const mappedData: MeteoroidRecord[] = data.map((item: any) => ({
                 id: item.id,
                 name: item.name,
@@ -49,11 +62,33 @@ const MeteoritesPage = () => {
                 year: item.year,
             }))
 
-            setNasaMeteorites(mappedData)
-            toast.success(`${mappedData.length} NASA meteorites loaded`)
+            if (reset) {
+                setNasaMeteorites(mappedData)
+            } else {
+                setNasaMeteorites(prev => [...prev, ...mappedData])
+            }
+
+            setCurrentPage(pagination.current_page || page)
+            setTotalPages(pagination.total_pages || 1)
+            setHasMore(pagination.has_next || false)
+
+            if (reset) {
+                toast.success(`${mappedData.length} NASA meteorites loaded`)
+            } else {
+                toast.success(`${mappedData.length} more meteorites loaded`)
+            }
         } catch (error) {
             console.error('Error fetching NASA meteorites:', error)
             toast.error('Error loading NASA meteorites')
+        } finally {
+            setLoading(false)
+            setLoadingMore(false)
+        }
+    }
+
+    const loadMoreMeteorites = () => {
+        if (!loadingMore && hasMore && activeTab === 'nasa') {
+            fetchNasaMeteorites(currentPage + 1, false)
         }
     }
 
@@ -249,6 +284,44 @@ const MeteoritesPage = () => {
                                 </div>
                             </motion.div>
                         ))}
+                    </div>
+                )}
+
+                {/* Load More Button */}
+                {activeTab === 'nasa' && !loading && (
+                    <div className="mt-12 flex flex-col items-center gap-4">
+                        <div className="text-gray-400 text-sm">
+                            Page {currentPage + 1} of {totalPages} • Showing {nasaMeteorites.length} meteorites
+                        </div>
+                        
+                        {hasMore ? (
+                            <button
+                                onClick={loadMoreMeteorites}
+                                disabled={loadingMore}
+                                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-lg font-semibold transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                            >
+                                {loadingMore ? (
+                                    <>
+                                        <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <span>Loading More...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <span>Load More Meteorites</span>
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </>
+                                )}
+                            </button>
+                        ) : (
+                            <div className="inline-block px-6 py-3 bg-gray-800 border border-gray-700 rounded-lg text-gray-400">
+                                🎉 You've reached the end! All {nasaMeteorites.length} meteorites loaded.
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

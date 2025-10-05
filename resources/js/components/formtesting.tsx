@@ -51,6 +51,9 @@ const FormTesting = () => {
     const [nasaMeteoroidsData, setNasaMeteoroidsData] = useState<MeteoroidRecord[]>([])
     const [savedMeteoroidsData, setSavedMeteoroidsData] = useState<MeteoroidRecord[]>([])
     const [loading, setLoading] = useState(false)
+    const [loadingMoreNasa, setLoadingMoreNasa] = useState(false)
+    const [nasaCurrentPage, setNasaCurrentPage] = useState(0)
+    const [nasaHasMore, setNasaHasMore] = useState(true)
     const [selectedNasaId, setSelectedNasaId] = useState<string | null>(null)
     const [selectedNasaName, setSelectedNasaName] = useState<string | null>(null)
     const [selectedSavedId, setSelectedSavedId] = useState<string | null>(null)
@@ -96,17 +99,19 @@ const FormTesting = () => {
         setShowInstagramGuide(false)
     }, [setIsSimulating, setCraterRadius, form])
 
-    // Fetch NASA meteoroids from Laravel API
+    // Fetch NASA meteoroids from Laravel API - Cargar primera página
     const fetchNasaMeteoroidsFromSupabase = async () => {
         setLoading(true)
         try {
-            const response = await fetch('/getMeteoritesNames')
+            const response = await fetch('/getMeteoritesNames?page=0')
 
             if (!response.ok) {
                 throw new Error('Failed to fetch NASA meteoroids')
             }
 
-            const data = await response.json()
+            const result = await response.json()
+            const data = result.data || []
+            const pagination = result.pagination || {}
 
             // Mapear los datos de NASA al formato que espera el componente
             const mappedData: MeteoroidRecord[] = data.map((item: any) => ({
@@ -115,12 +120,48 @@ const FormTesting = () => {
             }))
 
             setNasaMeteoroidsData(mappedData)
+            setNasaCurrentPage(0)
+            setNasaHasMore(pagination.has_next || false)
             toast.success(`${mappedData.length} NASA meteoroids loaded`, { duration: 1000 })
         } catch (error) {
             console.error('Error fetching NASA meteoroids:', error)
             toast.error('Error loading NASA meteoroids', { duration: 1000 })
         } finally {
             setLoading(false)
+        }
+    }
+
+    // Cargar más meteoritos de NASA
+    const loadMoreNasaMeteorites = async () => {
+        if (!nasaHasMore || loadingMoreNasa) return
+
+        setLoadingMoreNasa(true)
+        try {
+            const nextPage = nasaCurrentPage + 1
+            const response = await fetch(`/getMeteoritesNames?page=${nextPage}`)
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch more NASA meteoroids')
+            }
+
+            const result = await response.json()
+            const data = result.data || []
+            const pagination = result.pagination || {}
+
+            const mappedData: MeteoroidRecord[] = data.map((item: any) => ({
+                id: item.id,
+                name: item.name,
+            }))
+
+            setNasaMeteoroidsData(prev => [...prev, ...mappedData])
+            setNasaCurrentPage(nextPage)
+            setNasaHasMore(pagination.has_next || false)
+            toast.success(`${mappedData.length} more meteoroids loaded`, { duration: 1000 })
+        } catch (error) {
+            console.error('Error loading more NASA meteoroids:', error)
+            toast.error('Error loading more meteoroids')
+        } finally {
+            setLoadingMoreNasa(false)
         }
     }
 
@@ -1060,8 +1101,32 @@ This was created for NASA Space Apps Challenge using real NASA NEO data!
                                             </Select>
                                         </FormControl>
                                         <FormDescription>
-                                            Use real models from NASA
+                                            Use real models from NASA ({nasaMeteoroidsData.length} loaded)
                                         </FormDescription>
+                                        {nasaHasMore && (
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={loadMoreNasaMeteorites}
+                                                disabled={loadingMoreNasa}
+                                                className="w-full mt-2 bg-white text-black hover:bg-gray-100 border-gray-300 font-medium"
+                                            >
+                                                {loadingMoreNasa ? (
+                                                    <>
+                                                        <svg className="animate-spin h-4 w-4 mr-2 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                        </svg>
+                                                        <span className="text-black">Loading...</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <span className="text-black">⬇️ Load More NASA Meteorites</span>
+                                                    </>
+                                                )}
+                                            </Button>
+                                        )}
                                         <FormMessage />
                                     </FormItem>
                                 )}
