@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="meteorica.jpg" alt="Meteorica Logo" width="200"/>
+  <img src="meteorica.png" alt="Meteorica Logo" width="200"/>
   
   # 🌍 Meteorica
   
