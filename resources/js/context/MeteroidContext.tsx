@@ -27,6 +27,12 @@ interface MeteroidContextType {
     updateMeteroidData: (data: Partial<MeteroidData>) => void  // Función para actualizar parcialmente
     location: LatLng                     // Ubicación del mapa (lat, lng)
     setLocation: (loc: LatLng) => void  // Función para actualizar ubicación
+    selectedMeteoriteId: string | null   // ID del meteorito de NASA seleccionado
+    setSelectedMeteoriteId: (id: string | null) => void  // Función para actualizar ID
+    isSimulating: boolean                // Estado de si se está mostrando la simulación
+    setIsSimulating: (simulating: boolean) => void  // Función para activar/desactivar simulación
+    craterRadius: number | null          // Radio del cráter calculado
+    setCraterRadius: (radius: number | null) => void  // Función para actualizar el radio del cráter
 }
 
 // Creación del contexto con valor inicial undefined
@@ -75,6 +81,15 @@ export const MeteroidProvider: React.FC<MeteroidProviderProps> = ({ children }) 
 
     // Estado global para la ubicación del mapa (lat, lng)
     const [location, setLocation] = useState<LatLng>([26.915093, -101.430703])
+    
+    // Estado para el ID del meteorito de NASA seleccionado
+    const [selectedMeteoriteId, setSelectedMeteoriteId] = useState<string | null>(null)
+    
+    // Estado para controlar si se está mostrando la simulación
+    const [isSimulating, setIsSimulating] = useState(false)
+    
+    // Estado para el radio del cráter calculado
+    const [craterRadius, setCraterRadius] = useState<number | null>(null)
 
     /**
      * Función para actualizar parcialmente los datos del meteorito
@@ -87,7 +102,18 @@ export const MeteroidProvider: React.FC<MeteroidProviderProps> = ({ children }) 
     }
 
     return (
-        <MeteroidContext.Provider value={{ meteroidData, updateMeteroidData, location, setLocation }}>
+        <MeteroidContext.Provider value={{ 
+            meteroidData, 
+            updateMeteroidData, 
+            location, 
+            setLocation,
+            selectedMeteoriteId,
+            setSelectedMeteoriteId,
+            isSimulating,
+            setIsSimulating,
+            craterRadius,
+            setCraterRadius
+        }}>
             {children}
         </MeteroidContext.Provider>
     )
