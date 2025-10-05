@@ -127,33 +127,6 @@ Our mission is to educate and inspire the next generation of space scientists by
 - **Version Control**: Git
 
 ---
-
-## � Quick Start
-
-```bash
-# Clone the repository
-git clone https://github.com/Roberto0611/nasa.git
-cd nasa
-
-# Install dependencies
-composer install
-npm install
-
-# Setup environment
-cp .env.example .env
-php artisan key:generate
-
-# Run migrations and seed
-php artisan migrate --seed
-
-# Start development
-composer dev
-```
-
-Visit `http://localhost:8000` 🎉
-
----
-
 ## 📖 Usage
 
 ### Running Simulations
