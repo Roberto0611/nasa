@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\MeteoriteController;
 use App\Http\Controllers\GeminiController;
+use App\Http\Controllers\LessonController;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,6 +34,11 @@ Route::get('meteorites', function () {
 Route::get('nasabot', function () {
     return Inertia::render('public/NasaBot');
 })->name('nasabot');
+
+// NASA Academy Routes
+Route::get('academy', [LessonController::class, 'index'])->name('academy');
+Route::get('academy/{slug}', [LessonController::class, 'show'])->name('lesson.show');
+Route::get('api/lessons', [LessonController::class, 'api'])->name('lessons.api');
 
 // apis de NASA
 Route::get('getAllMeteorites', action: [MeteoriteController::class, 'getAllMeteorites']);

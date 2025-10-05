@@ -32,6 +32,11 @@ const LandingPage = () => {
                     </div>
                     <ul className="hidden md:flex space-x-8">
                         <li><a href="#home" className="hover:text-gray-300 transition">Home</a></li>
+                        <li>
+                            <Link href="/academy" className="hover:text-gray-300 transition">
+                                Academy
+                            </Link>
+                        </li>
                         <li><a href="#courses" className="hover:text-gray-300 transition">Courses</a></li>
                         <li><a href="#features" className="hover:text-gray-300 transition">Features</a></li>
                         <li>
@@ -69,14 +74,20 @@ const LandingPage = () => {
                         Master astronomy, physics, and planetary science with NASA's interactive educational platform
                     </p>
                     <div className="flex flex-col md:flex-row gap-4 justify-center">
-                        <Link href="#courses">
-                            <button onClick={ScrollToCourses} className="px-8 py-4 bg-white text-black hover:bg-gray-200 rounded-full font-semibold transition transform hover:scale-105">
-                                Start Learning
+                        <Link href="/academy">
+                            <button className="px-8 py-4 bg-white text-black hover:bg-gray-200 rounded-full font-semibold transition transform hover:scale-105 flex items-center justify-center gap-2">
+                                <span>🎓</span>
+                                <span>Explore Academy</span>
                             </button>
                         </Link>
                         <Link href="/sim">
                             <button className="px-8 py-4 bg-white text-black hover:bg-gray-200 rounded-full font-semibold transition transform hover:scale-105">
                                 Try Simulation
+                            </button>
+                        </Link>
+                        <Link href="#courses">
+                            <button onClick={ScrollToCourses} className="px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-black rounded-full font-semibold transition transform hover:scale-105">
+                                Learn More
                             </button>
                         </Link>
 

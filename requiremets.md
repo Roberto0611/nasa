@@ -11,3 +11,4 @@ npm install motion
 composer require google-gemini-php/client
 composer require guzzlehttp/guzzle
 npm install html2canvas
+npm install react-markdown
