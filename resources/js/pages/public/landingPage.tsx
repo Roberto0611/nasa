@@ -377,11 +377,11 @@ const LandingPage = () => {
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                         >
-                            <h2 className="text-5xl font-bold mb-6">About NASA Academy</h2>
+                            <h2 className="text-5xl font-bold mb-6">About Meteorica</h2>
                             <p className="text-xl text-gray-500 mb-8 leading-relaxed">
-                                NASA Academy is your gateway to understanding the universe. We provide free, high-quality space science education
-                                powered by NASA's vast knowledge and research. Whether you're a student, educator, or space enthusiast,
-                                our platform offers interactive courses, simulations, and resources to fuel your cosmic curiosity.
+                                Meteorica is your gateway to understanding asteroid impacts and planetary defense. We provide free, high-quality simulations
+                                powered by real NASA data and advanced physics. Whether you're a student, researcher, or space enthusiast,
+                                our platform offers interactive impact modeling, visualizations, and resources to explore near-Earth objects.
                             </p>
                             <div className="grid md:grid-cols-3 gap-8 mt-12">
                                 <div className="p-6">
@@ -555,7 +555,7 @@ const LandingPage = () => {
                 <div className="container mx-auto px-6">
                     <div className="grid md:grid-cols-4 gap-8 mb-8">
                         <div>
-                            <h3 className="font-bold text-lg mb-4">NASA Academy</h3>
+                            <h3 className="font-bold text-lg mb-4">Meteorica</h3>
                             <ul className="space-y-2 text-gray-500">
                                 <li><a href="#" className="hover:text-white transition">About Us</a></li>
                                 <li><a href="#" className="hover:text-white transition">Our Mission</a></li>
@@ -610,7 +610,7 @@ const LandingPage = () => {
                         </div>
                     </div>
                     <div className="border-t border-gray-800 pt-8 text-center text-gray-600">
-                        <p>&copy; 2025 NASA Academy. Educational platform powered by NASA. All rights reserved.</p>
+                        <p>&copy; 2025 Meteorica. Asteroid impact simulation platform powered by NASA data. All rights reserved.</p>
                     </div>
                 </div>
             </footer>
