@@ -142,44 +142,44 @@ const LandingPage = () => {
                             {
                                 title: 'Kinetic Energy',
                                 formula: 'KE = ½mv²',
-                                description: 'Calculate the energy released upon impact based on mass and velocity',
+                                description: 'Calculate the initial energy released upon impact based on mass and velocity',
                                 icon: '⚡',
-                                variables: 'm = mass, v = velocity'
+                                variables: 'm = mass (kg), v = velocity (m/s)'
                             },
                             {
                                 title: 'Impact Crater Diameter',
-                                formula: 'D = 1.8 × (ρₐ/ρₜ)^(1/3) × L^0.78 × v^0.44',
-                                description: 'Estimate the size of the crater formed by the asteroid impact',
+                                formula: 'D = C × (E / (g × ρₜ))^0.25',
+                                description: 'Melosh-Holsapple scaling law for crater formation from impact energy',
                                 icon: '🕳️',
-                                variables: 'ρₐ = asteroid density, ρₜ = target density'
+                                variables: 'E = impact energy, g = gravity, ρₜ = target density'
                             },
                             {
-                                title: 'Atmospheric Entry',
-                                formula: 'dv/dt = -½ × (ρA/m) × Cᴅ × v²',
-                                description: 'Model velocity changes as the asteroid enters the atmosphere',
-                                icon: '🌐',
-                                variables: 'ρ = air density, Cᴅ = drag coefficient'
+                                title: 'Atmospheric Ablation',
+                                formula: 'dm/dt = -(λ × A × ρ × v³) / (2Q)',
+                                description: 'Mass loss rate due to atmospheric friction and heating',
+                                icon: '🔥',
+                                variables: 'λ = heat transfer, A = area, ρ = air density, Q = ablation heat'
                             },
                             {
-                                title: 'Explosive Yield',
-                                formula: 'E = ½mv² (in TNT equivalent)',
-                                description: 'Convert kinetic energy to equivalent TNT explosive power',
+                                title: 'TNT Equivalent Energy',
+                                formula: '1 Megaton = 4.184 × 10¹⁵ J',
+                                description: 'Convert kinetic energy to equivalent TNT explosive power for scale',
                                 icon: '💥',
-                                variables: '1 kiloton = 4.184 × 10¹² joules'
+                                variables: 'Used to express impact energy in familiar terms'
                             },
                             {
-                                title: 'Orbital Velocity',
-                                formula: 'v = √(GM/r)',
-                                description: 'Calculate the velocity needed for orbital mechanics',
-                                icon: '🛸',
-                                variables: 'G = gravitational constant, M = mass'
+                                title: 'Atmospheric Pressure',
+                                formula: 'q = ½ × ρ × v²',
+                                description: 'Dynamic pressure that causes meteoroid fragmentation during entry',
+                                icon: '�',
+                                variables: 'q = dynamic pressure, causes breakup when q > strength'
                             },
                             {
-                                title: 'Impact Angle Effects',
-                                formula: 'E_eff = E × sin²(θ)',
-                                description: 'Determine effective energy based on entry angle',
-                                icon: '📐',
-                                variables: 'θ = angle from horizontal'
+                                title: 'Exponential Atmosphere',
+                                formula: 'ρ(h) = ρ₀ × e^(-h/H)',
+                                description: 'Air density decreases exponentially with altitude',
+                                icon: '🌐',
+                                variables: 'ρ₀ = sea level density, H = scale height (8000m)'
                             }
                         ].map((formula, index) => (
                             <motion.div
