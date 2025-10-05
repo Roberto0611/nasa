@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MeteoriteController;
+use App\Http\Controllers\GeminiController;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,6 +34,11 @@ Route::get('meteorites', function () {
 Route::get('getAllMeteorites', action: [MeteoriteController::class, 'getAllMeteorites']);
 Route::get('getMeteoriteById/{id}', [MeteoriteController::class, 'getMeteoriteById']);
 Route::get('getMeteoritesNames', action: [MeteoriteController::class, 'getMeteoritesNames']);
+
+// API de Gemini
+Route::get('getEfemeride', [GeminiController::class, 'getText']);
+Route::get('listGeminiModels', [GeminiController::class, 'listAvailableModels']);
+Route::get('askNASAExpert', [GeminiController::class, 'askNASAExpert']);
 
 // meteoritos user
 Route::post('meteorites/store', [MeteoriteController::class, 'store'])->name('meteorites.store');
