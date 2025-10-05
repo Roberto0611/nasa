@@ -121,8 +121,7 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
                 onSuccess: (page) => {
                     console.log("✅ Datos guardados exitosamente en Laravel")
 
-                    // Alerta de éxito
-                    alert('¡Meteorito registrado exitosamente! ✅')
+                    // Mostrar toast de éxito
                     toast.success(`Meteoroid "${data.namemeteroid}" saved successfully!`)
 
                     // Opcional: guardar también en localStorage

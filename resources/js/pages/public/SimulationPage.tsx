@@ -9,6 +9,7 @@ import FormMeteroid from '../../components/selectmeteroidform'  // Formulario de
 import MapPage from './map.page'
 import FormTesting from '@/components/formtesting'
 import { MeteroidProvider, useMeteroidContext } from '../../context/MeteroidContext'  // Proveedor del contexto
+import { Toaster } from '@/components/sonner'  // Sistema de notificaciones toast
 
 /**
  * Componente wrapper que obtiene datos del contexto y los pasa al Canvas
@@ -153,6 +154,7 @@ const SimulationPage = () => {
                     </div>
                 )}
             </Suspense>
+            <Toaster />
         </MeteroidProvider>
     )
 }
