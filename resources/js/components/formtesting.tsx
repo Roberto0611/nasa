@@ -32,6 +32,7 @@ import {
 import { GraduationCap } from 'lucide-react'
 import { duration } from 'node_modules/zod/v4/classic/iso.cjs'
 import { Share2, MessageCircle, Instagram, Twitter, Facebook } from 'lucide-react'
+import ImpactAnalysis from './ImpactAnalysis'
 
 type MeteoroidRecord = {
     id?: number
@@ -61,6 +62,7 @@ const FormTesting = () => {
     const [impactData, setImpactData] = useState<any>(null) // Datos del impacto para mostrar
     const [showShareButtons, setShowShareButtons] = useState(false)
     const [showInstagramGuide, setShowInstagramGuide] = useState(false)
+    const [showAIAnalysis, setShowAIAnalysis] = useState(false) // Mostrar análisis con IA
 
     const form = useForm<any>({
         defaultValues: {
@@ -900,6 +902,17 @@ This was created for NASA Space Apps Challenge using real NASA NEO data!
 
                         {/* Botones de acción mejorados */}
                         <div className="space-y-3 pt-2">
+                            {/* Botón de Análisis con IA - NUEVO */}
+                            <Button
+                                type="button"
+                                onClick={() => setShowAIAnalysis(true)}
+                                variant="outline"
+                                className="w-full bg-white text-black border-2 border-gray-300 hover:bg-gray-50 flex items-center justify-center gap-2 py-4 font-semibold"
+                            >
+                                <span>🤖</span>
+                                AI Impact Analysis
+                            </Button>
+
                             {/* Botón principal de compartir */}
                             <Button
                                 type="button"
@@ -1263,6 +1276,14 @@ This was created for NASA Space Apps Challenge using real NASA NEO data!
                     </Form>
                 )}
             </div>
+
+            {/* Modal de Análisis con IA */}
+            {showAIAnalysis && impactData && (
+                <ImpactAnalysis 
+                    impactData={impactData}
+                    onClose={() => setShowAIAnalysis(false)}
+                />
+            )}
         </TooltipProvider>
     )
 }

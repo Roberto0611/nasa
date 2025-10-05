@@ -49,6 +49,7 @@ Route::get('getMeteoritesNames', action: [MeteoriteController::class, 'getMeteor
 Route::get('getEfemeride', [GeminiController::class, 'getText']);
 Route::get('listGeminiModels', [GeminiController::class, 'listAvailableModels']);
 Route::post('askNASAExpert', [GeminiController::class, 'askNASAExpert']);
+Route::post('analyzeImpact', [GeminiController::class, 'analyzeImpactSimulation']);
 
 // Endpoint de prueba para debugging
 Route::get('testGemini', function() {
