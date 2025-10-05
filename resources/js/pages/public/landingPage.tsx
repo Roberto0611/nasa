@@ -32,6 +32,11 @@ const LandingPage = () => {
                         <li><a href="#home" className="hover:text-gray-300 transition">Home</a></li>
                         <li><a href="#courses" className="hover:text-gray-300 transition">Courses</a></li>
                         <li><a href="#features" className="hover:text-gray-300 transition">Features</a></li>
+                        <li>
+                            <Link href="/meteorites" className="hover:text-gray-300 transition">
+                                Meteorites Database
+                            </Link>
+                        </li>
                         <li><a href="#about" className="hover:text-gray-300 transition">About</a></li>
                         <li><a href="#contact" className="hover:text-gray-300 transition">Contact</a></li>
                     </ul>
@@ -246,11 +251,20 @@ const LandingPage = () => {
                                     <span>Educational insights and analysis</span>
                                 </li>
                             </ul>
-                            <Link href="/home">
-                                <button className="px-6 py-3 bg-white text-black hover:bg-gray-200 rounded-lg font-semibold transition transform hover:scale-105">
-                                    Launch Simulator
-                                </button>
-                            </Link>
+
+                            <div className="flex gap-4">
+                                <Link href="/home">
+                                    <button className="px-6 py-3 bg-white text-black hover:bg-gray-200 rounded-lg font-semibold transition transform hover:scale-105">
+                                        Launch Simulator
+                                    </button>
+                                </Link>
+                                <Link href="/meteorites">
+                                    <button className="px-6 py-3 bg-white text-black hover:bg-gray-200 rounded-lg font-semibold transition transform hover:scale-105">
+                                        Meteorites List
+                                    </button>
+                                </Link>
+                            </div>
+
                         </motion.div>
                         <motion.div
                             initial={{ opacity: 0, x: 50 }}
@@ -267,6 +281,73 @@ const LandingPage = () => {
                                 </Canvas>
                             </div>
                         </motion.div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Meteorites Database Section */}
+            <section className="py-20 bg-black/50">
+                <div className="container mx-auto px-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        className="text-center mb-16"
+                    >
+                        <span className="text-gray-400 font-semibold mb-2 block">COMPREHENSIVE DATABASE</span>
+                        <h2 className="text-5xl font-bold mb-4">160M+ NASA Meteorites</h2>
+                        <p className="text-xl text-gray-500 max-w-3xl mx-auto">
+                            Explore our extensive collection of documented meteorites from NASA's database,
+                            plus thousands of user-created simulations
+                        </p>
+                    </motion.div>
+
+                    <div className="grid md:grid-cols-3 gap-8 mb-12">
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1 }}
+                            className="text-center p-8 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700"
+                        >
+                            <div className="text-5xl mb-4">🌍</div>
+                            <h3 className="text-2xl font-bold mb-3">NASA Collection</h3>
+                            <p className="text-gray-400">
+                                Access verified data on meteorites discovered and documented by NASA scientists worldwide
+                            </p>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 }}
+                            className="text-center p-8 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700"
+                        >
+                            <div className="text-5xl mb-4">👥</div>
+                            <h3 className="text-2xl font-bold mb-3">User Created</h3>
+                            <p className="text-gray-400">
+                                Browse custom meteoroid simulations created by students and researchers
+                            </p>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            className="text-center p-8 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700"
+                        >
+                            <div className="text-5xl mb-4">🔍</div>
+                            <h3 className="text-2xl font-bold mb-3">Advanced Search</h3>
+                            <p className="text-gray-400">
+                                Filter by mass, composition, year of discovery, and entry parameters
+                            </p>
+                        </motion.div>
+                    </div>
+
+                    <div className="text-center">
+                        <Link href="/meteorites">
+                            <button className="px-8 py-4 bg-white text-black hover:bg-gray-200 rounded-full font-semibold transition transform hover:scale-105">
+                                Explore Meteorites Database →
+                            </button>
+                        </Link>
                     </div>
                 </div>
             </section>
