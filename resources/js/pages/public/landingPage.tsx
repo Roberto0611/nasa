@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from '@inertiajs/react';
+import { Canvas } from '@react-three/fiber';
+import Earth from '../../../assets/Planets/earth';
+import { Suspense } from 'react';
+// Componente de la Tierra con texturas reales
+
+const ScrollToCourses = () => {
+    window.location.href = '#courses';
+};
 
 const LandingPage = () => {
     const [scrollY, setScrollY] = useState(0);
@@ -54,15 +62,11 @@ const LandingPage = () => {
                     </p>
                     <div className="flex flex-col md:flex-row gap-4 justify-center">
                         <Link href="#courses">
-                            <button className="px-8 py-4 bg-white text-black hover:bg-gray-200 rounded-full font-semibold transition transform hover:scale-105">
+                            <button onClick={ScrollToCourses} className="px-8 py-4 bg-white text-black hover:bg-gray-200 rounded-full font-semibold transition transform hover:scale-105">
                                 Start Learning
                             </button>
                         </Link>
-                        <Link href="/sim">
-                            <button className="px-8 py-4 bg-transparent border-2 border-white text-white hover:bg-white hover:text-black rounded-full font-semibold transition transform hover:scale-105">
-                                Try Simulator
-                            </button>
-                        </Link>
+
                     </div>
                 </motion.div>
 
@@ -79,9 +83,9 @@ const LandingPage = () => {
                 <div className="container mx-auto px-6">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                         {[
-                            { number: '50+', label: 'Interactive Courses' },
+                            { number: '100%', label: 'Personalizable Meteorites' },
                             { number: '10K+', label: 'Active Students' },
-                            { number: '500+', label: 'Educational Resources' },
+                            { number: '160M+', label: 'Meteorites ' },
                             { number: '100%', label: 'Free Access' }
                         ].map((stat, index) => (
                             <motion.div
@@ -107,66 +111,96 @@ const LandingPage = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         className="text-center mb-16"
                     >
-                        <h2 className="text-5xl font-bold mb-4">Popular Courses</h2>
-                        <p className="text-xl text-gray-500">Learn from NASA experts and space science professionals</p>
+                        <h2 className="text-5xl font-bold mb-4">Physics & Mathematics</h2>
+                        <p className="text-xl text-gray-500">Understand the formulas behind asteroid impact science</p>
                     </motion.div>
 
-                    <div className="grid md:grid-cols-3 gap-8">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {[
                             {
-                                title: 'Introduction to Astronomy',
-                                description: 'Explore the fundamentals of astronomy, from stars to galaxies',
-                                icon: '🌟',
-                                level: 'Beginner',
-                                duration: '6 weeks'
+                                title: 'Kinetic Energy',
+                                formula: 'KE = ½mv²',
+                                description: 'Calculate the energy released upon impact based on mass and velocity',
+                                icon: '⚡',
+                                variables: 'm = mass, v = velocity'
                             },
                             {
-                                title: 'Planetary Science',
-                                description: 'Study the formation and evolution of planets in our solar system',
-                                icon: '🪐',
-                                level: 'Intermediate',
-                                duration: '8 weeks'
+                                title: 'Impact Crater Diameter',
+                                formula: 'D = 1.8 × (ρₐ/ρₜ)^(1/3) × L^0.78 × v^0.44',
+                                description: 'Estimate the size of the crater formed by the asteroid impact',
+                                icon: '🕳️',
+                                variables: 'ρₐ = asteroid density, ρₜ = target density'
                             },
                             {
-                                title: 'Space Physics',
-                                description: 'Understand the physics behind space exploration and rocketry',
-                                icon: '🚀',
-                                level: 'Advanced',
-                                duration: '10 weeks'
+                                title: 'Atmospheric Entry',
+                                formula: 'dv/dt = -½ × (ρA/m) × Cᴅ × v²',
+                                description: 'Model velocity changes as the asteroid enters the atmosphere',
+                                icon: '🌐',
+                                variables: 'ρ = air density, Cᴅ = drag coefficient'
+                            },
+                            {
+                                title: 'Explosive Yield',
+                                formula: 'E = ½mv² (in TNT equivalent)',
+                                description: 'Convert kinetic energy to equivalent TNT explosive power',
+                                icon: '💥',
+                                variables: '1 kiloton = 4.184 × 10¹² joules'
+                            },
+                            {
+                                title: 'Orbital Velocity',
+                                formula: 'v = √(GM/r)',
+                                description: 'Calculate the velocity needed for orbital mechanics',
+                                icon: '🛸',
+                                variables: 'G = gravitational constant, M = mass'
+                            },
+                            {
+                                title: 'Impact Angle Effects',
+                                formula: 'E_eff = E × sin²(θ)',
+                                description: 'Determine effective energy based on entry angle',
+                                icon: '📐',
+                                variables: 'θ = angle from horizontal'
                             }
-                        ].map((course, index) => (
+                        ].map((formula, index) => (
                             <motion.div
                                 key={index}
                                 initial={{ opacity: 0, y: 50 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.2 }}
+                                transition={{ delay: index * 0.1 }}
                                 className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl overflow-hidden backdrop-blur-sm border border-gray-700 hover:border-gray-500 transition group cursor-pointer"
                             >
-                                <div className="relative h-48 overflow-hidden bg-gradient-to-br from-gray-700/20 to-gray-800/20">
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent z-10"></div>
-                                    <div className="absolute top-4 right-4 z-20 px-3 py-1 bg-white text-black rounded-full text-xs font-semibold">
-                                        {course.level}
-                                    </div>
-                                    <div className="w-full h-full flex items-center justify-center">
-                                        <span className="text-8xl opacity-30">{course.icon}</span>
-                                    </div>
-                                </div>
                                 <div className="p-6">
-                                    <h3 className="text-2xl font-bold mb-3 group-hover:text-gray-300 transition">{course.title}</h3>
-                                    <p className="text-gray-500 mb-4">{course.description}</p>
-                                    <div className="flex items-center justify-between mb-4">
-                                        <span className="text-sm text-gray-600">⏱️ {course.duration}</span>
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <span className="text-4xl">{formula.icon}</span>
+                                        <h3 className="text-xl font-bold group-hover:text-gray-300 transition">{formula.title}</h3>
                                     </div>
-                                    <button className="text-white hover:text-gray-300 font-semibold flex items-center gap-2 group">
-                                        Enroll Now
-                                        <svg className="w-4 h-4 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                        </svg>
-                                    </button>
+                                    <div className="bg-black/50 rounded-lg p-4 mb-4 font-mono text-center border border-gray-600">
+                                        <p className="text-lg text-white">{formula.formula}</p>
+                                    </div>
+                                    <p className="text-gray-400 text-sm mb-3">{formula.description}</p>
+                                    <p className="text-gray-500 text-xs italic">{formula.variables}</p>
+                                    <Link href="/formulas">
+                                        <button className="mt-4 text-white hover:text-gray-300 font-semibold flex items-center gap-2 group text-sm">
+                                            Learn More
+                                            <svg className="w-4 h-4 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </button>
+                                    </Link>
                                 </div>
                             </motion.div>
                         ))}
                     </div>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        className="text-center mt-12"
+                    >
+                        <Link href="/formulas">
+                            <button className="px-8 py-4 bg-white text-black hover:bg-gray-200 rounded-lg font-semibold transition transform hover:scale-105">
+                                Explore All Formulas
+                            </button>
+                        </Link>
+                    </motion.div>
                 </div>
             </section>
 
@@ -223,19 +257,14 @@ const LandingPage = () => {
                             whileInView={{ opacity: 1, x: 0 }}
                             className="relative"
                         >
-                            <div className="aspect-square rounded-2xl bg-gradient-to-br from-gray-700 to-gray-900 p-1">
-                                <div className="w-full h-full bg-black/50 rounded-2xl flex items-center justify-center overflow-hidden">
-                                    <div className="text-center p-8 relative">
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                            <div className="w-32 h-32 bg-gray-600/30 rounded-full animate-pulse"></div>
-                                        </div>
-                                        <div className="relative z-10">
-                                            <div className="text-8xl mb-4">☄️</div>
-                                            <p className="text-gray-300 font-semibold">Interactive Simulation</p>
-                                            <p className="text-gray-500 text-sm mt-2">Track & Analyze Asteroids</p>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div className="aspect-square rounded-2xl  to-gray-900">
+                                <Canvas>
+                                    {/* Suspense anidado para carga de texturas de la Tierra */}
+                                    <Suspense fallback={null}>
+                                        {/* Tierra con texturas reales de 8K y animación de rotación */}
+                                        <Earth />
+                                    </Suspense>
+                                </Canvas>
                             </div>
                         </motion.div>
                     </div>
