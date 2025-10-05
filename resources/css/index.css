@@ -117,16 +117,6 @@
   body {
     @apply bg-background text-foreground;
   }
-  
-  /* Asegurar que el texto sea siempre visible */
-  h1, h2, h3, h4, h5, h6, p, span, label, button, input, select {
-    color: inherit;
-  }
-  
-  /* Estilos para formularios con fondo blanco */
-  form {
-    color: #000;
-  }
 }
 
 
