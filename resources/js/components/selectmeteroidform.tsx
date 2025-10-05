@@ -341,7 +341,7 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
                         </div>
                         <div>
                             <Button type="button" variant="default" className="text-black border-black hover:bg-black hover:text-white" onClick={onSubmitNasaModels}>
-                                Use real models of NASA
+                                Go to simulation
                             </Button>
                         </div>
                     </div>
