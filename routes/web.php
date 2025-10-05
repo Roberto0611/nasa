@@ -51,6 +51,10 @@ Route::get('listGeminiModels', [GeminiController::class, 'listAvailableModels'])
 Route::post('askNASAExpert', [GeminiController::class, 'askNASAExpert']);
 Route::post('analyzeImpact', [GeminiController::class, 'analyzeImpactSimulation']);
 
+// API de Deflection Strategies (Planetary Defense)
+Route::post('simulateDeflection', [\App\Http\Controllers\DeflectionController::class, 'simulateDeflection']);
+Route::post('compareStrategies', [\App\Http\Controllers\DeflectionController::class, 'compareStrategies']);
+
 // Endpoint de prueba para debugging
 Route::get('testGemini', function() {
     try {

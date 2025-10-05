@@ -72,7 +72,7 @@ Our mission is to educate and inspire the next generation of space scientists by
 
 ### 🤖 NASAbot AI Assistant
 - **Powered by Google Gemini AI** for intelligent responses
-- **🎯 AI Impact Analysis** (NEW!):
+- **🎯 AI Impact Analysis**:
   - Comprehensive post-simulation analysis
   - Historical comparisons with real events (Tunguska, Chelyabinsk, Chicxulub)
   - Threat level assessment (Insignificant → Catastrophic)
@@ -80,13 +80,34 @@ Our mission is to educate and inspire the next generation of space scientists by
   - Mitigation strategies and deflection recommendations
   - Beautiful markdown-formatted reports with visualizations
 - **Context-aware explanations** of simulation results
-- **Educational Q&A** about:
-  - Atmospheric physics (f_atm parameter)
-  - Impact energy calculations
-  - Crater formation mechanics
-  - Fragmentation effects
+- **Educational Q&A** about atmospheric physics, impact energy, crater formation
 - **Multilingual support** (English/Spanish)
 - **Floating chat interface** accessible from any page
+
+### 🛡️ Planetary Defense Simulator ⭐ **NEW!**
+- **Interactive deflection strategy testing** - THE feature requested by NASA Space Apps!
+- **4 Real-World Strategies** based on actual missions and research:
+  - 🚀 **Kinetic Impactor** (NASA DART mission - successful 2022)
+  - 🛰️ **Gravity Tractor** (ESA/NASA concept)
+  - ☢️ **Nuclear Standoff** (Lawrence Livermore studies)
+  - 🔬 **Laser Ablation** (DE-STAR concept)
+- **Real Physics Calculations**:
+  - Momentum transfer (Δv = m·v·β / M)
+  - Orbital deflection angles
+  - Miss distance from Earth
+  - Success/failure predictions
+- **User-Adjustable Parameters**:
+  - Detection lead time (1-10 years slider)
+  - Strategy selection with visual feedback
+- **Comprehensive Results**:
+  - Delta-V applied (cm/s precision)
+  - Miss distance (km and Earth radii)
+  - Mission cost ($B USD)
+  - Success probability (%)
+  - Safety level assessment
+- **Comparison Mode**: Test all 4 strategies side-by-side
+- **AI Recommendations**: Best strategy based on effectiveness score
+- **Educational Integration**: Learn trade-offs between cost, time, and reliability
 
 ### 📊 Data Visualization
 - **Interactive 3D Earth model** with realistic textures

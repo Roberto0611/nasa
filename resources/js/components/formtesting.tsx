@@ -910,7 +910,7 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
                                 className="w-full bg-white text-black border-2 border-gray-300 hover:bg-gray-50 flex items-center justify-center gap-2 py-4 font-semibold"
                             >
                                 <span>🤖</span>
-                                AI Impact Analysis
+                                AI Impact Analysis + Defense Strategies
                             </Button>
 
                             {/* Botón principal de compartir */}
