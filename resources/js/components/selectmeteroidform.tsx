@@ -8,6 +8,7 @@ import { router } from '@inertiajs/react'  // Para hacer peticiones a Laravel
 import { meteroidSchema } from '../../lib/meteroidSchema'
 import type { MeteroidFormData } from '../../lib/meteroidSchema'
 import { useMeteroidContext } from '../context/MeteroidContext'  // Contexto global
+import { GraduationCap } from 'lucide-react'  // Ícono educativo
 
 import { Button } from "../components/ui/button"  // Componente de botón
 import {
@@ -21,6 +22,12 @@ import {
 } from "./form"  // Componentes de formulario de shadcn/ui
 import { Input } from "./input"  // Campo de entrada
 import { toast } from 'sonner'  // Sistema de notificaciones
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "./ui/tooltip"  // Componente de tooltip
 
 import {
     Select,
@@ -143,152 +150,204 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
     }
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmitSave)} className="space-y-4">
+        <TooltipProvider>
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmitSave)} className="space-y-4">
 
-                <h1 className='text-2xl font-bold text-black'> Create your Meteroid</h1>
+                    <h1 className='text-2xl font-bold text-black'> Create your Meteroid</h1>
 
 
-                <FormField
-                    control={form.control}
-                    name="namemeteroid"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Name of the meteoroid</FormLabel>
-                            <FormControl>
-                                <Input
-                                    type="text"
-                                    placeholder="Enter meteoroid name"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                Enter the name of the meteoroid
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                    <FormField
+                        control={form.control}
+                        name="namemeteroid"
+                        render={({ field }) => (
+                            <FormItem>
+                                <div className="flex items-center gap-2">
+                                    <FormLabel>Name of the meteoroid</FormLabel>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <GraduationCap className="h-4 w-4 text-blue-600 cursor-help" />
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p className="max-w-xs">Give your meteoroid a unique name to identify it. This helps you track and manage multiple meteoroid simulations.</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </div>
+                                <FormControl>
+                                    <Input
+                                        type="text"
+                                        placeholder="Enter meteoroid name"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormDescription>
+                                    Enter the name of the meteoroid
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                <FormField
-                    control={form.control}
-                    name="radiusMeteroid"
-                    render={({ field }) => (
+                    <FormField
+                        control={form.control}
+                        name="radiusMeteroid"
+                        render={({ field }) => (
 
-                        <FormItem>
-                            <FormLabel>Radius of the meteoroid (m)</FormLabel>
-                            <FormControl>
-                                <Input
-                                    type="text"
-                                    placeholder="1000"
-                                    {...field}
-                                    onChange={e => {
-                                        const value = e.target.value.replace(/[^0-9.]/g, '')
-                                        field.onChange(value ? parseFloat(value) : undefined)
-                                    }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                Enter the radius of the meteoroid in meters
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                            <FormItem>
+                                <div className="flex items-center gap-2">
+                                    <FormLabel>Radius of the meteoroid (m)</FormLabel>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <GraduationCap className="h-4 w-4 text-blue-600 cursor-help" />
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p className="max-w-xs">The radius determines the size of your meteoroid. Larger meteoroids (100+ meters) cause more significant impacts, while smaller ones may burn up in the atmosphere.</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </div>
+                                <FormControl>
+                                    <Input
+                                        type="text"
+                                        placeholder="1000"
+                                        {...field}
+                                        onChange={e => {
+                                            const value = e.target.value.replace(/[^0-9.]/g, '')
+                                            field.onChange(value ? parseFloat(value) : undefined)
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormDescription>
+                                    Enter the radius of the meteoroid in meters
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                <FormField
-                    control={form.control}
-                    name="velocity"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Velocity (m/s)</FormLabel>
-                            <FormControl>
-                                <Input
-                                    type="text"
-                                    placeholder="1000"
-                                    {...field}
-                                    onChange={e => {
-                                        const value = e.target.value.replace(/[^0-9.]/g, '')
-                                        field.onChange(value ? parseFloat(value) : undefined)
-                                    }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                Enter the velocity of the meteoroid in meters per second
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                    <FormField
+                        control={form.control}
+                        name="velocity"
+                        render={({ field }) => (
+                            <FormItem>
+                                <div className="flex items-center gap-2">
+                                    <FormLabel>Velocity (m/s)</FormLabel>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <GraduationCap className="h-4 w-4 text-blue-600 cursor-help" />
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p className="max-w-xs">Meteoroids enter Earth's atmosphere at speeds between 11-72 km/s (11,000-72,000 m/s). Higher velocities create more intense impacts and atmospheric heating.</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </div>
+                                <FormControl>
+                                    <Input
+                                        type="text"
+                                        placeholder="1000"
+                                        {...field}
+                                        onChange={e => {
+                                            const value = e.target.value.replace(/[^0-9.]/g, '')
+                                            field.onChange(value ? parseFloat(value) : undefined)
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormDescription>
+                                    Enter the velocity of the meteoroid in meters per second
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                <FormField
-                    control={form.control}
-                    name="angle"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Entry Angle (degrees)</FormLabel>
-                            <FormControl>
-                                <Input
-                                    type="text"
-                                    placeholder="45"
-                                    {...field}
-                                    onChange={e => {
-                                        const value = e.target.value.replace(/[^0-9.]/g, '')
-                                        field.onChange(value ? parseFloat(value) : undefined)
-                                    }}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                Enter the entry angle (0-90 degrees)
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                    <FormField
+                        control={form.control}
+                        name="angle"
+                        render={({ field }) => (
+                            <FormItem>
+                                <div className="flex items-center gap-2">
+                                    <FormLabel>Entry Angle (degrees)</FormLabel>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <GraduationCap className="h-4 w-4 text-blue-600 cursor-help" />
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p className="max-w-xs">Entry angle is measured from horizontal. 90° is vertical impact (most destructive), while shallow angles (15-30°) cause the meteoroid to travel farther through the atmosphere.</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </div>
+                                <FormControl>
+                                    <Input
+                                        type="text"
+                                        placeholder="45"
+                                        {...field}
+                                        onChange={e => {
+                                            const value = e.target.value.replace(/[^0-9.]/g, '')
+                                            field.onChange(value ? parseFloat(value) : undefined)
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormDescription>
+                                    Enter the entry angle (0-90 degrees)
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                <FormField
-                    control={form.control}
-                    name="material"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Material of the meteoroid</FormLabel>
-                            <FormControl>
-                                <Select
-                                    onValueChange={field.onChange}
-                                    defaultValue={field.value}
-                                >
-                                    <SelectTrigger className="w-[180px]">
-                                        <SelectValue placeholder="Select material" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="rock">Rock</SelectItem>
-                                        <SelectItem value="iron">Iron</SelectItem>
-                                        <SelectItem value="nickel">Nickel</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </FormControl>
-                            <FormDescription>
-                                Enter the material of the meteoroid
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                    <FormField
+                        control={form.control}
+                        name="material"
+                        render={({ field }) => (
+                            <FormItem>
+                                <div className="flex items-center gap-2">
+                                    <FormLabel>Material of the meteoroid</FormLabel>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <GraduationCap className="h-4 w-4 text-blue-600 cursor-help" />
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p className="max-w-xs">Material composition affects impact energy. Iron meteoroids are denser and more likely to reach the surface, while rocky ones may fragment in the atmosphere. Nickel meteoroids have intermediate properties.</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </div>
+                                <FormControl>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger className="w-[180px]">
+                                            <SelectValue placeholder="Select material" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="rock">Rock</SelectItem>
+                                            <SelectItem value="iron">Iron</SelectItem>
+                                            <SelectItem value="nickel">Nickel</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                                <FormDescription>
+                                    Enter the material of the meteoroid
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                <div style={{ display: 'flex', gap: '10px' }}>
-                    <div>
-                        <Button type="submit" variant="default" className="text-black border-black hover:bg-black hover:text-white" onClick={form.handleSubmit(onSubmitSave)}>
-                            Save
-                        </Button>
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                        <div>
+                            <Button type="submit" variant="default" className="text-black border-black hover:bg-black hover:text-white" onClick={form.handleSubmit(onSubmitSave)}>
+                                Save
+                            </Button>
+                        </div>
+                        <div>
+                            <Button type="button" variant="default" className="text-black border-black hover:bg-black hover:text-white" onClick={onSubmitNasaModels}>
+                                Use real models of NASA
+                            </Button>
+                        </div>
                     </div>
-                    <div>
-                        <Button type="button" variant="default" className="text-black border-black hover:bg-black hover:text-white" onClick={onSubmitNasaModels}>
-                            Use real models of NASA
-                        </Button>
-                    </div>
-                </div>
-            </form>
-        </Form>
+                </form>
+            </Form>
+        </TooltipProvider>
     )
 }
 
