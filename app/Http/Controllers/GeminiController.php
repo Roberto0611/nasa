@@ -19,7 +19,7 @@ class GeminiController extends Controller
             
             $prompt = "";
 
-            $apiKey = getenv('GEMINI_API_KEY');
+            $apiKey = env('GEMINI_API_KEY');
             $client = Gemini::client($apiKey);
             
             // Intentar con diferentes modelos disponibles
@@ -67,7 +67,7 @@ class GeminiController extends Controller
     public static function listAvailableModels(): JsonResponse
     {
         try {
-            $apiKey = getenv('GEMINI_API_KEY');
+            $apiKey = env('GEMINI_API_KEY');
             $client = Gemini::client($apiKey);
             
             // Intentar obtener la lista de modelos
@@ -90,14 +90,23 @@ class GeminiController extends Controller
     public static function askNASAExpert(Request $request): JsonResponse
     {
         try {
-            // AQUI AGREGAR EL INPUT QUE OBTENEMOS DEL CHAT
-            $userQuestion = "Que puedo hacer en el simulador?";
+            // Obtener la pregunta del request
+            $userQuestion = $request->input('question', '');
             
             if (empty($userQuestion)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Por favor proporciona una pregunta'
                 ], 400);
+            }
+
+            // Verificar que tenemos la API key
+            $apiKey = env('GEMINI_API_KEY');
+            if (empty($apiKey)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'API key de Gemini no configurada'
+                ], 500);
             }
             
             $expertPrompt = "Eres un profesor de la NASA que es experto en astrofísica y se especializa en meteorología espacial. Tu tarea es ayudar al usuario a entender que esta pasando en la simulación, a su vez de también resolver cualquier duda que tenga en base a los siguientes cálculos, los cuales son los que usamos en nuestra simulación:
@@ -124,13 +133,12 @@ Da respuestas cortas y concisas pero que ayuden a resolver todas las dudas del u
 
 PREGUNTA DEL USUARIO: {$userQuestion}";
 
-            $apiKey = getenv('GEMINI_API_KEY');
             $client = Gemini::client($apiKey);
             
             // Intentar con diferentes modelos disponibles
             $modelsToTry = [
                 'gemini-pro',
-                'gemini-1.5-pro',
+                'gemini-1.5-pro', 
                 'gemini-1.5-flash',
                 'gemini-2.0-flash-exp',
                 'text-bison-001'
@@ -163,7 +171,11 @@ PREGUNTA DEL USUARIO: {$userQuestion}";
             return response()->json([
                 'success' => false,
                 'message' => 'Error al consultar al experto de la NASA',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'debug' => [
+                    'request_data' => $request->all(),
+                    'api_key_exists' => !empty(getenv('GEMINI_API_KEY'))
+                ]
             ], 500);
         }
     } 

@@ -42,7 +42,21 @@ Route::get('getMeteoritesNames', action: [MeteoriteController::class, 'getMeteor
 // API de Gemini
 Route::get('getEfemeride', [GeminiController::class, 'getText']);
 Route::get('listGeminiModels', [GeminiController::class, 'listAvailableModels']);
-Route::get('askNASAExpert', [GeminiController::class, 'askNASAExpert']);
+Route::post('askNASAExpert', [GeminiController::class, 'askNASAExpert']);
+
+// Endpoint de prueba para debugging
+Route::get('testGemini', function() {
+    try {
+        $apiKey = env('GEMINI_API_KEY');
+        return response()->json([
+            'api_key_exists' => !empty($apiKey),
+            'api_key_length' => $apiKey ? strlen($apiKey) : 0,
+            'gemini_class_exists' => class_exists('Gemini')
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
 
 // meteoritos user
 Route::post('meteorites/store', [MeteoriteController::class, 'store'])->name('meteorites.store');

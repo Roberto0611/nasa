@@ -16,7 +16,7 @@ const NasaBot = () => {
     const [messages, setMessages] = useState<Message[]>([
         {
             id: 1,
-            text: "Hello! I'm NASAbot, your AI space science assistant powered by Google Gemini. Ask me anything about astronomy, physics, asteroids, or space exploration! 🚀",
+            text: "¡Hola! Soy NASAbot, tu asistente de ciencias espaciales impulsado por Google Gemini. Soy un profesor experto en astrofísica especializado en meteorología espacial. Puedo ayudarte a entender simulaciones de impactos de asteroides, resolver dudas sobre física espacial, y explicarte cualquier cosa sobre astronomía y exploración espacial. ¡Pregúntame lo que quieras! 🚀",
             sender: 'bot',
             timestamp: new Date()
         }
@@ -40,77 +40,36 @@ const NasaBot = () => {
         inputRef.current?.focus()
     }, [])
 
-    // Predefined responses for demo (you'll replace this with actual Gemini API calls)
-    const getBotResponse = (userMessage: string): string => {
-        const lowerMessage = userMessage.toLowerCase()
+    // Real API call to NASA Expert using Gemini
+    const getBotResponse = async (userMessage: string): Promise<string> => {
+        try {
+            const response = await fetch('/askNASAExpert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify({
+                    question: userMessage
+                })
+            });
 
-        // Asteroid-related questions
-        if (lowerMessage.includes('asteroid') || lowerMessage.includes('meteor')) {
-            return "Asteroids are rocky remnants from the early formation of our solar system about 4.6 billion years ago. Most asteroids orbit the Sun in the asteroid belt between Mars and Jupiter. They range in size from small boulders to objects hundreds of kilometers in diameter. Would you like to know about specific asteroids or their impact risks?"
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+                return data.data.expert_response;
+            } else {
+                return `Lo siento, hubo un error al procesar tu pregunta: ${data.message}`;
+            }
+        } catch (error) {
+            console.error('Error calling NASA Expert API:', error);
+            return "Lo siento, no pude conectarme con el sistema de IA en este momento. Por favor, intenta de nuevo más tarde. 🤖";
         }
-
-        // Speed of light
-        if (lowerMessage.includes('speed of light') || lowerMessage.includes('light speed')) {
-            return "The speed of light in a vacuum is exactly 299,792,458 meters per second (approximately 300,000 km/s or 186,000 miles/s). This is denoted by the constant 'c' and is the universal speed limit - nothing can travel faster than light in a vacuum. This fundamental constant plays a crucial role in Einstein's theory of relativity."
-        }
-
-        // Mars
-        if (lowerMessage.includes('mars')) {
-            return "Mars, the Red Planet, is the fourth planet from the Sun. It has a thin atmosphere composed mainly of carbon dioxide, surface temperatures averaging -63°C (-81°F), and two small moons: Phobos and Deimos. NASA has successfully landed several rovers on Mars, including Curiosity and Perseverance, which are currently exploring the planet's surface for signs of past microbial life."
-        }
-
-        // Black holes
-        if (lowerMessage.includes('black hole')) {
-            return "A black hole is a region of spacetime where gravity is so strong that nothing, not even light, can escape from it. They form when massive stars collapse at the end of their life cycle. The boundary around a black hole is called the event horizon. Black holes can have masses ranging from a few times our Sun to billions of solar masses (supermassive black holes) found at the centers of galaxies."
-        }
-
-        // Earth
-        if (lowerMessage.includes('earth')) {
-            return "Earth is the third planet from the Sun and the only known planet to harbor life. It has a diameter of about 12,742 km, orbits the Sun at an average distance of 150 million km (1 AU), and completes one orbit in 365.25 days. Earth's atmosphere is composed of 78% nitrogen, 21% oxygen, and trace amounts of other gases. The planet has one natural satellite, the Moon."
-        }
-
-        // Moon
-        if (lowerMessage.includes('moon')) {
-            return "The Moon is Earth's only natural satellite, located about 384,400 km away. It has a diameter of 3,474 km (about 1/4 of Earth's diameter) and takes 27.3 days to orbit Earth. The same side of the Moon always faces Earth due to tidal locking. NASA's Apollo program successfully landed 12 astronauts on the Moon between 1969 and 1972."
-        }
-
-        // Solar system
-        if (lowerMessage.includes('solar system') || lowerMessage.includes('planets')) {
-            return "Our solar system consists of the Sun and everything bound to it by gravity: 8 planets (Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune), their moons, dwarf planets like Pluto, asteroids, comets, and interplanetary dust. The solar system formed about 4.6 billion years ago from a giant molecular cloud. Would you like to learn about a specific planet?"
-        }
-
-        // Gravity
-        if (lowerMessage.includes('gravity')) {
-            return "Gravity is one of the four fundamental forces of nature. It's the force of attraction between objects with mass. On Earth, gravity accelerates objects at 9.8 m/s². Newton's law of universal gravitation describes it as F = G(m₁m₂/r²), where G is the gravitational constant. Einstein's general relativity describes gravity as the curvature of spacetime caused by mass and energy."
-        }
-
-        // NASA
-        if (lowerMessage.includes('nasa')) {
-            return "NASA (National Aeronautics and Space Administration) is the United States government agency responsible for the civilian space program and aerospace research. Founded in 1958, NASA has conducted groundbreaking missions including the Apollo Moon landings, Space Shuttle program, International Space Station, Mars rover missions, and the James Webb Space Telescope. NASA's mission is to explore space and expand our understanding of Earth and the universe."
-        }
-
-        // Simulation
-        if (lowerMessage.includes('simulat') || lowerMessage.includes('sim')) {
-            return "Our Asteroid Impact Simulator allows you to model asteroid collisions with Earth! You can customize parameters like size, velocity, entry angle, and material composition. The simulator uses real physics equations to calculate impact energy, crater size, and potential damage. Try it out from the main menu to see how different asteroids would affect our planet!"
-        }
-
-        // Greetings
-        if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
-            return "Hello! 👋 I'm here to help you learn about space science. You can ask me about planets, stars, asteroids, physics formulas, or anything related to astronomy and space exploration!"
-        }
-
-        // Thanks
-        if (lowerMessage.includes('thank') || lowerMessage.includes('thanks')) {
-            return "You're welcome! I'm always here to help you explore the wonders of space. Feel free to ask me anything else! 🌟"
-        }
-
-        // Help
-        if (lowerMessage.includes('help') || lowerMessage.includes('what can you')) {
-            return "I can help you with:\n\n🪐 Planetary science and solar system facts\n☄️ Asteroids, meteors, and comets\n⚛️ Physics and mathematical formulas\n🚀 Space missions and NASA history\n🌌 Cosmology and the universe\n🔭 Astronomy and celestial objects\n\nJust ask me a question about any of these topics!"
-        }
-
-        // Default response
-        return "That's a great question! While I'm currently running in demo mode with predefined responses, the full NASAbot powered by Google Gemini AI will be able to answer any space science question in detail. For now, try asking me about asteroids, planets, the speed of light, black holes, or NASA missions! 🌠"
     }
 
     const handleSendMessage = async () => {
@@ -125,20 +84,33 @@ const NasaBot = () => {
         }
 
         setMessages(prev => [...prev, userMessage])
+        const currentMessage = inputMessage
         setInputMessage('')
         setIsTyping(true)
 
-        // Simulate bot thinking time
-        setTimeout(() => {
+        try {
+            // Get bot response from Gemini API
+            const botResponseText = await getBotResponse(currentMessage)
+            
             const botResponse: Message = {
                 id: messages.length + 2,
-                text: getBotResponse(inputMessage),
+                text: botResponseText,
                 sender: 'bot',
                 timestamp: new Date()
             }
             setMessages(prev => [...prev, botResponse])
+        } catch (error) {
+            console.error('Error getting bot response:', error)
+            const errorResponse: Message = {
+                id: messages.length + 2,
+                text: "Lo siento, hubo un problema técnico. Por favor, intenta de nuevo. 🤖",
+                sender: 'bot',
+                timestamp: new Date()
+            }
+            setMessages(prev => [...prev, errorResponse])
+        } finally {
             setIsTyping(false)
-        }, 1000 + Math.random() * 1000) // Random delay between 1-2 seconds
+        }
     }
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -150,11 +122,11 @@ const NasaBot = () => {
 
     // Quick question suggestions
     const quickQuestions = [
-        "What is an asteroid?",
-        "Tell me about Mars",
-        "How fast is the speed of light?",
-        "What are black holes?",
-        "Explain gravity"
+        "¿Qué significa f_atm en mi simulación?",
+        "¿Cómo se calcula la energía de impacto?",
+        "¿Qué es la ablación atmosférica?",
+        "Explícame los efectos de fragmentación",
+        "¿Cómo funciona la simulación de cráteres?"
     ]
 
     const handleQuickQuestion = (question: string) => {
@@ -259,7 +231,7 @@ const NasaBot = () => {
             {/* Quick Questions (only show if no messages from user yet) */}
             {messages.length === 1 && (
                 <div className="container mx-auto px-6 max-w-4xl pb-4">
-                    <p className="text-sm text-gray-400 mb-3">Try asking:</p>
+                    <p className="text-sm text-gray-400 mb-3">Prueba preguntando:</p>
                     <div className="flex flex-wrap gap-2">
                         {quickQuestions.map((question, index) => (
                             <button
@@ -285,7 +257,7 @@ const NasaBot = () => {
                                 value={inputMessage}
                                 onChange={(e) => setInputMessage(e.target.value)}
                                 onKeyPress={handleKeyPress}
-                                placeholder="Ask me anything about space science..."
+                                placeholder="Pregúntame sobre simulaciones, física espacial, asteroides..."
                                 className="w-full px-6 py-4 bg-white/10 border border-gray-700 rounded-2xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition pr-12"
                             />
                             <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
@@ -297,14 +269,14 @@ const NasaBot = () => {
                             disabled={!inputMessage.trim()}
                             className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 disabled:from-gray-700 disabled:to-gray-800 disabled:cursor-not-allowed rounded-2xl font-semibold transition transform hover:scale-105 disabled:transform-none flex items-center gap-2"
                         >
-                            <span>Send</span>
+                            <span>Enviar</span>
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                             </svg>
                         </button>
                     </div>
                     <p className="text-xs text-gray-500 mt-3 text-center">
-                        NASAbot is currently in demo mode with predefined responses. Full Gemini AI integration coming soon! 🚀
+                        NASAbot ahora está conectado con Google Gemini AI y listo para ayudarte con simulaciones espaciales! 🚀
                     </p>
                 </div>
             </div>
