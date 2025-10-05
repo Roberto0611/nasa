@@ -1,7 +1,7 @@
 // SimulationPage.tsx - Página principal del simulador de meteoritos
 // Combina el formulario de configuración con la visualización 3D en tiempo real
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'  // Contenedor 3D de React Three Fiber
 import { Suspense } from 'react'  // Componente para carga diferida
 import PersonalizablePlanet from '../../../assets/Planets/personalizableplanet'  // Planeta 3D
@@ -30,138 +30,138 @@ const PlanetCanvasWrapper = () => {
 }
 
 /**
- * Página del simulador de meteoritos
- * 
- * Layout de pantalla dividida:
- * - Panel izquierdo (420px): Formulario de configuración del meteorito
- * - Panel derecho (flexible): Visualización 3D del planeta personalizable
- * 
- * Funcionalidades:
- * - Configuración en tiempo real de parámetros del meteorito
- * - Visualización 3D que responde a cambios del formulario
- * - Interfaz intuitiva con controles de cámara
- * - Sistema de carga diferida para optimizar rendimiento
+ * Componente interno que tiene acceso al contexto para limpiar estados
  */
-const SimulationPage = () => {
+const SimulationPageContent = () => {
     // Estado para controlar qué sección mostrar
     const [activeSection, setActiveSection] = useState<'simulation' | 'analysis'>('simulation')
     
     // Estado para controlar el chat flotante
     const [isChatOpen, setIsChatOpen] = useState(false)
+    
+    // Acceso al contexto para limpiar estados
+    const { setIsSimulating, setCraterRadius } = useMeteroidContext()
 
     const toggleChat = () => {
         setIsChatOpen(!isChatOpen)
     }
 
+    // Limpiar estados de simulación cuando se cambia de pestaña
+    useEffect(() => {
+        if (activeSection === 'simulation') {
+            // Cuando volvemos a la pestaña de simulación, limpiar estados
+            setIsSimulating(false)
+            setCraterRadius(null)
+        }
+    }, [activeSection, setIsSimulating, setCraterRadius])
+
     return (
-        <MeteroidProvider>
-            <Suspense fallback={null}>
-                {/* Botones de alternancia */}
+        <Suspense fallback={null}>
+            {/* Botones de alternancia */}
+            <div style={{
+                position: 'fixed',
+                top: '20px',
+                right: '20px',
+                zIndex: 1000,
+                display: 'flex',
+                gap: '10px'
+            }}>
+                <button
+                    onClick={() => setActiveSection('simulation')}
+                    style={{
+                        padding: '10px 20px',
+                        backgroundColor: activeSection === 'simulation' ? '#007cba' : '#f0f0f0',
+                        color: activeSection === 'simulation' ? 'white' : 'black',
+                        border: 'none',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        fontWeight: activeSection === 'simulation' ? 'bold' : 'normal',
+                        fontSize: '14px'
+                    }}
+                >
+                    Create your own Meteorite
+                </button>
+                <button
+                    onClick={() => setActiveSection('analysis')}
+                    style={{
+                        padding: '10px 20px',
+                        backgroundColor: activeSection === 'analysis' ? '#007cba' : '#f0f0f0',
+                        color: activeSection === 'analysis' ? 'white' : 'black',
+                        border: 'none',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        fontWeight: activeSection === 'analysis' ? 'bold' : 'normal',
+                        fontSize: '14px'
+                    }}
+                >
+                    Simulation
+                </button>
+            </div>
+
+            {/* Sección de Simulación 3D */}
+            {activeSection === 'simulation' && (
                 <div style={{
-                    position: 'fixed',
-                    top: '20px',
-                    right: '20px',
-                    zIndex: 1000,
+                    width: '100vw',
+                    height: '100vh',
                     display: 'flex',
-                    gap: '10px'
+                    background: 'black',
                 }}>
-                    <button
-                        onClick={() => setActiveSection('simulation')}
-                        style={{
-                            padding: '10px 20px',
-                            backgroundColor: activeSection === 'simulation' ? '#007cba' : '#f0f0f0',
-                            color: activeSection === 'simulation' ? 'white' : 'black',
-                            border: 'none',
-                            borderRadius: '8px',
-                            cursor: 'pointer',
-                            fontWeight: activeSection === 'simulation' ? 'bold' : 'normal',
-                            fontSize: '14px'
-                        }}
-                    >
-                        Create your own Meteorite
-                    </button>
-                    <button
-                        onClick={() => setActiveSection('analysis')}
-                        style={{
-                            padding: '10px 20px',
-                            backgroundColor: activeSection === 'analysis' ? '#007cba' : '#f0f0f0',
-                            color: activeSection === 'analysis' ? 'white' : 'black',
-                            border: 'none',
-                            borderRadius: '8px',
-                            cursor: 'pointer',
-                            fontWeight: activeSection === 'analysis' ? 'bold' : 'normal',
-                            fontSize: '14px'
-                        }}
-                    >
-                        Simulation
-                    </button>
+                    {/* Panel izquierdo - Formulario */}
+                    <div style={{
+                        width: '420px',
+                        padding: '20px',
+                        boxSizing: 'border-box',
+                        backgroundColor: 'white',
+                        color: 'black',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+                        <FormMeteroid onActivateSimulation={() => setActiveSection('analysis')} />
+                    </div>
+
+                    {/* Panel derecho - Visualización 3D */}
+                    <div style={{
+                        flex: 1,
+                        height: '100%',
+                        width: '600px'
+                    }}>
+                        <PlanetCanvasWrapper />
+                    </div>
                 </div>
+            )}
 
-                {/* Sección de Simulación 3D */}
-                {activeSection === 'simulation' && (
+            {/* Sección de Análisis con Mapa */}
+            {activeSection === 'analysis' && (
+                <div style={{
+                    width: '100vw',
+                    height: '100vh',
+                    display: 'flex',
+                    background: 'white',
+                }}>
+                    {/* Panel izquierdo - Formulario */}
                     <div style={{
-                        width: '100vw',
-                        height: '100vh',
-                        display: 'flex',
-                        background: 'black',
+                        width: '420px',
+                        padding: '20px',
+                        boxSizing: 'border-box',
+                        backgroundColor: 'white',
+                        color: 'black',
+                        overflowY: 'auto',
+                        overflowX: 'hidden'
                     }}>
-                        {/* Panel izquierdo - Formulario */}
-                        <div style={{
-                            width: '420px',
-                            padding: '20px',
-                            boxSizing: 'border-box',
-                            backgroundColor: 'white',
-                            color: 'black',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}>
-                            <FormMeteroid onActivateSimulation={() => setActiveSection('analysis')} />
-                        </div>
-
-                        {/* Panel derecho - Visualización 3D */}
-                        <div style={{
-                            flex: 1,
-                            height: '100%',
-                            width: '600px'
-                        }}>
-                            <PlanetCanvasWrapper />
-                        </div>
+                        <FormTesting />
                     </div>
-                )}
 
-                {/* Sección de Análisis con Mapa */}
-                {activeSection === 'analysis' && (
+                    {/* Panel derecho - Mapa */}
                     <div style={{
-                        width: '100vw',
-                        height: '100vh',
-                        display: 'flex',
-                        background: 'white',
+                        flex: 1,
+                        height: '100%',
+                        width: '100%'
                     }}>
-                        {/* Panel izquierdo - Formulario */}
-                        <div style={{
-                            width: '420px',
-                            padding: '20px',
-                            boxSizing: 'border-box',
-                            backgroundColor: 'white',
-                            color: 'black',
-                            overflowY: 'auto',
-                            overflowX: 'hidden'
-                        }}>
-                            <FormTesting />
-                        </div>
-
-                        {/* Panel derecho - Mapa */}
-                        <div style={{
-                            flex: 1,
-                            height: '100%',
-                            width: '100%'
-                        }}>
-                            <MapPage />
-                        </div>
+                        <MapPage />
                     </div>
-                )}
-            </Suspense>
+                </div>
+            )}
             
             {/* Chat flotante de NASAbot */}
             <FloatingChat isOpen={isChatOpen} onToggle={toggleChat} />
@@ -170,6 +170,17 @@ const SimulationPage = () => {
             <ChatToggleButton isOpen={isChatOpen} onClick={toggleChat} />
             
             <Toaster />
+        </Suspense>
+    )
+}
+
+/**
+ * Componente principal que envuelve todo con el Provider
+ */
+const SimulationPage = () => {
+    return (
+        <MeteroidProvider>
+            <SimulationPageContent />
         </MeteroidProvider>
     )
 }

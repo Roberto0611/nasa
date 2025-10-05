@@ -86,8 +86,16 @@ function ImpactAnimation({ center, isActive }: { center: [number, number], isAct
     const [countdown, setCountdown] = useState(3)
     const [impactStarted, setImpactStarted] = useState(false)
 
+    // Limpiar todos los estados cuando isActive se vuelve false
     useEffect(() => {
-        if (!isActive) return
+        if (!isActive) {
+            setShowFlash(false)
+            setShockwaveRadius(0)
+            setParticles([])
+            setCountdown(3)
+            setImpactStarted(false)
+            return
+        }
 
         // Countdown antes del impacto
         let countdownInterval: NodeJS.Timeout

@@ -76,6 +76,29 @@ const FormTesting = () => {
         fetchSavedMeteoroidsFromSupabase()
     }, [])
 
+    // Limpiar estados de impacto cuando se monta el componente (cambio de pestaña)
+    useEffect(() => {
+        // Limpiar los datos de impacto previos
+        setImpactData(null)
+        setIsSimulating(false)
+        setCraterRadius(null)
+        
+        // Limpiar formulario
+        form.reset({
+            selectedNasaMeteoroid: undefined,
+            selectedSavedMeteoroid: undefined,
+            selectedCity: undefined,
+        })
+        
+        // Limpiar selecciones
+        setSelectedNasaId(null)
+        setSelectedNasaName(null)
+        setSelectedSavedId(null)
+        setSelectedSavedName(null)
+        setShowShareButtons(false)
+        setShowInstagramGuide(false)
+    }, [setIsSimulating, setCraterRadius, form])
+
     // Fetch NASA meteoroids from Laravel API - Cargar primera página
     const fetchNasaMeteoroidsFromSupabase = async () => {
         setLoading(true)
