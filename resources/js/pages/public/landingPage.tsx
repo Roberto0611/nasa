@@ -170,7 +170,7 @@ const LandingPage = () => {
                             {
                                 title: 'Atmospheric Pressure',
                                 formula: 'q = ½ × ρ × v²',
-                                description: 'Dynamic pressure that causes meteoroid fragmentation during entry',
+                                description: 'Dynamic pressure that causes Meteorite fragmentation during entry',
                                 icon: 'P',
                                 variables: 'q = dynamic pressure, causes breakup when q > strength'
                             },
@@ -336,7 +336,7 @@ const LandingPage = () => {
                             <div className="text-5xl mb-4">👥</div>
                             <h3 className="text-2xl font-bold mb-3">User Created</h3>
                             <p className="text-gray-400">
-                                Browse custom meteoroid simulations created by students and researchers
+                                Browse custom Meteorite simulations created by students and researchers
                             </p>
                         </motion.div>
 
@@ -588,3 +588,4 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+

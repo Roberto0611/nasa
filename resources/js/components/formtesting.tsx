@@ -43,7 +43,7 @@ import { duration } from 'node_modules/zod/v4/classic/iso.cjs'
 import { Share2, MessageCircle, Instagram, Twitter, Facebook } from 'lucide-react'
 import ImpactAnalysis from './ImpactAnalysis'
 
-type MeteoroidRecord = {
+type MeteoriteRecord = {
     id?: number
     name: string
     radiusMeteroid?: number
@@ -58,8 +58,8 @@ type MeteoroidRecord = {
 
 const FormTesting = () => {
     const { updateMeteroidData, setLocation, setSelectedMeteoriteId, setIsSimulating, setCraterRadius } = useMeteroidContext()
-    const [nasaMeteoroidsData, setNasaMeteoroidsData] = useState<MeteoroidRecord[]>([])
-    const [savedMeteoroidsData, setSavedMeteoroidsData] = useState<MeteoroidRecord[]>([])
+    const [nasaMeteoritesData, setNasaMeteoritesData] = useState<MeteoriteRecord[]>([])
+    const [savedMeteoritesData, setSavedMeteoritesData] = useState<MeteoriteRecord[]>([])
     const [loading, setLoading] = useState(false)
     const [loadingMoreNasa, setLoadingMoreNasa] = useState(false)
     const [nasaCurrentPage, setNasaCurrentPage] = useState(0)
@@ -75,16 +75,16 @@ const FormTesting = () => {
 
     const form = useForm<any>({
         defaultValues: {
-            selectedNasaMeteoroid: undefined,
-            selectedSavedMeteoroid: undefined,
+            selectedNasaMeteorite: undefined,
+            selectedSavedMeteorite: undefined,
             selectedCity: undefined,
         }
     })
 
     // Cargar meteoritos guardados y de NASA al montar el componente
     useEffect(() => {
-        fetchNasaMeteoroidsFromSupabase()
-        fetchSavedMeteoroidsFromSupabase()
+        fetchNasaMeteoritesFromSupabase()
+        fetchSavedMeteoritesFromSupabase()
     }, [])
 
     // Limpiar estados de impacto cuando se monta el componente (cambio de pestaña)
@@ -96,8 +96,8 @@ const FormTesting = () => {
         
         // Limpiar formulario
         form.reset({
-            selectedNasaMeteoroid: undefined,
-            selectedSavedMeteoroid: undefined,
+            selectedNasaMeteorite: undefined,
+            selectedSavedMeteorite: undefined,
             selectedCity: undefined,
         })
         
@@ -110,14 +110,14 @@ const FormTesting = () => {
         setShowInstagramGuide(false)
     }, [setIsSimulating, setCraterRadius, form])
 
-    // Fetch NASA meteoroids from Laravel API - Cargar primera página
-    const fetchNasaMeteoroidsFromSupabase = async () => {
+    // Fetch NASA Meteorites from Laravel API - Cargar primera página
+    const fetchNasaMeteoritesFromSupabase = async () => {
         setLoading(true)
         try {
             const response = await fetch('/getMeteoritesNames?page=0')
 
             if (!response.ok) {
-                throw new Error('Failed to fetch NASA meteoroids')
+                throw new Error('Failed to fetch NASA Meteorites')
             }
 
             const result = await response.json()
@@ -125,21 +125,21 @@ const FormTesting = () => {
             const pagination = result.pagination || {}
 
             // Mapear los datos de NASA al formato que espera el componente
-            const mappedData: MeteoroidRecord[] = data.map((item: any) => ({
+            const mappedData: MeteoriteRecord[] = data.map((item: any) => ({
                 id: item.id,
                 name: item.name,
             }))
 
-            setNasaMeteoroidsData(mappedData)
+            setNasaMeteoritesData(mappedData)
             setNasaCurrentPage(0)
             setNasaHasMore(pagination.has_next || false)
-            toast.success(`${mappedData.length} NASA meteoroids loaded`, { 
+            toast.success(`${mappedData.length} NASA Meteorites loaded`, { 
                 id: TOAST_IDS.LOADING,
                 duration: 1500 
             })
         } catch (error) {
-            console.error('Error fetching NASA meteoroids:', error)
-            toast.error('Error loading NASA meteoroids', { 
+            console.error('Error fetching NASA Meteorites:', error)
+            toast.error('Error loading NASA Meteorites', { 
                 id: TOAST_IDS.LOADING,
                 duration: 2000 
             })
@@ -158,44 +158,44 @@ const FormTesting = () => {
             const response = await fetch(`/getMeteoritesNames?page=${nextPage}`)
 
             if (!response.ok) {
-                throw new Error('Failed to fetch more NASA meteoroids')
+                throw new Error('Failed to fetch more NASA Meteorites')
             }
 
             const result = await response.json()
             const data = result.data || []
             const pagination = result.pagination || {}
 
-            const mappedData: MeteoroidRecord[] = data.map((item: any) => ({
+            const mappedData: MeteoriteRecord[] = data.map((item: any) => ({
                 id: item.id,
                 name: item.name,
             }))
 
-            setNasaMeteoroidsData(prev => [...prev, ...mappedData])
+            setNasaMeteoritesData(prev => [...prev, ...mappedData])
             setNasaCurrentPage(nextPage)
             setNasaHasMore(pagination.has_next || false)
-            toast.success(`${mappedData.length} more meteoroids loaded`, { duration: 1000 })
+            toast.success(`${mappedData.length} more Meteorites loaded`, { duration: 1000 })
         } catch (error) {
-            console.error('Error loading more NASA meteoroids:', error)
-            toast.error('Error loading more meteoroids')
+            console.error('Error loading more NASA Meteorites:', error)
+            toast.error('Error loading more Meteorites')
         } finally {
             setLoadingMoreNasa(false)
         }
     }
 
-    // Fetch saved meteoroids from Laravel
-    const fetchSavedMeteoroidsFromSupabase = async () => {
+    // Fetch saved Meteorites from Laravel
+    const fetchSavedMeteoritesFromSupabase = async () => {
         setLoading(true)
         try {
             const response = await fetch('/getAllUserMeteorites')
 
             if (!response.ok) {
-                throw new Error('Failed to fetch meteoroids')
+                throw new Error('Failed to fetch Meteorites')
             }
 
             const data = await response.json()
 
             // Mapear los datos de la BD al formato que espera el componente
-            const mappedData: MeteoroidRecord[] = data.map((item: any) => ({
+            const mappedData: MeteoriteRecord[] = data.map((item: any) => ({
                 id: item.id,
                 name: item.name,
                 radiusMeteroid: item.radius,  // BD usa 'radius', componente usa 'radiusMeteroid'
@@ -206,14 +206,14 @@ const FormTesting = () => {
                 lng: item.lng,
             }))
 
-            setSavedMeteoroidsData(mappedData)
-            toast.success(`${mappedData.length} saved meteoroids loaded`, { 
+            setSavedMeteoritesData(mappedData)
+            toast.success(`${mappedData.length} saved Meteorites loaded`, { 
                 id: TOAST_IDS.LOADING,
                 duration: 1500 
             })
         } catch (error) {
-            console.error('Error fetching saved meteoroids:', error)
-            toast.error('Error loading saved meteoroids', { 
+            console.error('Error fetching saved Meteorites:', error)
+            toast.error('Error loading saved Meteorites', { 
                 id: TOAST_IDS.LOADING,
                 duration: 2000 
             })
@@ -223,21 +223,21 @@ const FormTesting = () => {
     }
 
     // Cargar un meteorito seleccionado
-    const loadMeteoroidData = (meteoroid: MeteoroidRecord) => {
-        if (meteoroid.radiusMeteroid) form.setValue('radiusMeteroid', meteoroid.radiusMeteroid)
-        if (meteoroid.velocity) form.setValue('velocity', meteoroid.velocity)
-        if (meteoroid.angle) form.setValue('angle', meteoroid.angle)
-        if (meteoroid.material) form.setValue('material', meteoroid.material)
+    const loadMeteoriteData = (Meteorite: MeteoriteRecord) => {
+        if (Meteorite.radiusMeteroid) form.setValue('radiusMeteroid', Meteorite.radiusMeteroid)
+        if (Meteorite.velocity) form.setValue('velocity', Meteorite.velocity)
+        if (Meteorite.angle) form.setValue('angle', Meteorite.angle)
+        if (Meteorite.material) form.setValue('material', Meteorite.material)
 
         // Actualizar contexto para la visualización 3D
         updateMeteroidData({
-            radiusMeteroid: meteoroid.radiusMeteroid || 0,
-            velocity: meteoroid.velocity || 0,
-            angle: meteoroid.angle || 0,
-            material: (meteoroid.material as 'rock' | 'iron' | 'nickel') || 'rock'
+            radiusMeteroid: Meteorite.radiusMeteroid || 0,
+            velocity: Meteorite.velocity || 0,
+            angle: Meteorite.angle || 0,
+            material: (Meteorite.material as 'rock' | 'iron' | 'nickel') || 'rock'
         })
 
-        toast.success(`Meteoroid loaded: ${meteoroid.name}`, {
+        toast.success(`Meteorite loaded: ${Meteorite.name}`, {
             id: TOAST_IDS.LOADING,
             duration: 2000
         })
@@ -253,11 +253,11 @@ const FormTesting = () => {
     }
 
     const onSubmitSimulate = async (data: any) => {
-        console.log("Simulating meteoroid impact with data:", data)
+        console.log("Simulating Meteorite impact with data:", data)
 
         // Verificar que se haya seleccionado un meteorito (NASA o guardado)
         if (!selectedNasaId && !selectedSavedId) {
-            toast.error('Please select a meteoroid first', {
+            toast.error('Please select a Meteorite first', {
                 id: TOAST_IDS.SIMULATION,
                 duration: 2000
             })
@@ -271,15 +271,15 @@ const FormTesting = () => {
             })
 
             let response
-            let meteoroidName
+            let MeteoriteName
 
             // Llamar a la API correspondiente según el tipo seleccionado
             if (selectedNasaId) {
                 response = await axios.get(`/getMeteoriteById/${selectedNasaId}`)
-                meteoroidName = selectedNasaName
+                MeteoriteName = selectedNasaName
             } else {
                 response = await axios.get(`/getUserMeteoriteById/${selectedSavedId}`)
-                meteoroidName = selectedSavedName
+                MeteoriteName = selectedSavedName
             }
 
             const atmosphericImpact = response.data?.atmospheric_impact
@@ -288,7 +288,7 @@ const FormTesting = () => {
 
             // Guardar todos los datos del impacto
             setImpactData({
-                name: meteoroidName,
+                name: MeteoriteName,
                 atmospheric_impact: atmosphericImpact,
                 calculations: calculations
             })
@@ -303,7 +303,7 @@ const FormTesting = () => {
                     duration: 2000 
                 })
             } else {
-                toast.warning('Crater data not available for this meteoroid', {
+                toast.warning('Crater data not available for this Meteorite', {
                     id: TOAST_IDS.SIMULATION,
                     duration: 2500
                 })
@@ -410,7 +410,7 @@ const FormTesting = () => {
 
             ctx.fillStyle = '#3b82f6'
             ctx.font = 'bold 32px Arial'
-            ctx.fillText('⚡ METEOROID PROPERTIES', 70, yPos + 40)
+            ctx.fillText('⚡ Meteorite PROPERTIES', 70, yPos + 40)
 
             ctx.fillStyle = '#ffffff'
             ctx.font = '24px Arial'
@@ -572,7 +572,7 @@ const FormTesting = () => {
         // Crear texto enriquecido
         const text = `🚀 METEORICA - METEORITE IMPACT SIMULATION 💥
 
-📍 Meteoroid: ${impactData.name}
+📍 Meteorite: ${impactData.name}
 💥 Crater Diameter: ${impactData.atmospheric_impact?.crater_diameter_m?.toFixed(0)}m
 ⚡ Energy: ${impactData.calculations?.kinetic_energy_initial_megatons_tnt?.toFixed(2)} Megatons TNT
 🔥 Fragmented: ${impactData.atmospheric_impact?.broke ? 'YES' : 'NO'}
@@ -674,7 +674,7 @@ Simulated with Meteorica - NASA Space Apps Challenge
 
         const caption = `🚀 METEORICA - METEORITE IMPACT SIMULATION 💥
 
-📍 Meteoroid: ${impactData.name}
+📍 Meteorite: ${impactData.name}
 💥 Crater Diameter: ${impactData.atmospheric_impact?.crater_diameter_m?.toFixed(0)}m diameter
 ⚡ Energy: ${impactData.calculations?.kinetic_energy_initial_megatons_tnt?.toFixed(2)} Megatons TNT
 🔥 Atmospheric Fragmentation: ${impactData.atmospheric_impact?.broke ? 'YES' : 'NO'}
@@ -739,7 +739,7 @@ Simulated with Meteorica - NASA Space Apps Challenge 🌍
 
 I just simulated a meteorite impact using Meteorica with NASA's data!
 
-📍 Meteoroid: ${impactData.name}
+📍 Meteorite: ${impactData.name}
 💥 Crater Diameter: ${impactData.atmospheric_impact?.crater_diameter_m?.toFixed(0)} meters
 ⚡ Energy Released: ${impactData.calculations?.kinetic_energy_initial_megatons_tnt?.toFixed(2)} Megatons of TNT
 🔥 Atmospheric Fragmentation: ${impactData.atmospheric_impact?.broke ? 'YES' : 'NO'}
@@ -792,7 +792,7 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
                         <h2 className='text-xl font-semibold text-black'>{impactData.name}</h2>
 
                         <div className="space-y-3 bg-white/90 p-4 rounded-lg border border-gray-300 shadow-sm">
-                            <h3 className='text-lg font-bold text-blue-600'>Meteoroid Properties</h3>
+                            <h3 className='text-lg font-bold text-blue-600'>Meteorite Properties</h3>
                             <div className="grid grid-cols-2 gap-2 text-sm text-black">
                                 <div className="flex items-center gap-1">
                                     <span className="font-semibold">Diameter:</span>
@@ -802,7 +802,7 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
                                             <GraduationCap className="h-3 w-3 text-blue-500 cursor-help ml-1" />
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                            <p className="max-w-xs">The width of the meteoroid. Larger diameters result in more devastating impacts.</p>
+                                            <p className="max-w-xs">The width of the Meteorite. Larger diameters result in more devastating impacts.</p>
                                         </TooltipContent>
                                     </Tooltip>
                                 </div>
@@ -826,7 +826,7 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
                                             <GraduationCap className="h-3 w-3 text-blue-500 cursor-help ml-1" />
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                            <p className="max-w-xs">Entry speed. Meteoroids typically enter at 11-72 km/s. Velocity is squared in energy calculations.</p>
+                                            <p className="max-w-xs">Entry speed. Meteorites typically enter at 11-72 km/s. Velocity is squared in energy calculations.</p>
                                         </TooltipContent>
                                     </Tooltip>
                                 </div>
@@ -892,7 +892,7 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
                                             <GraduationCap className="h-3 w-3 text-red-500 cursor-help ml-1" />
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                            <p className="max-w-xs">Whether the meteoroid broke apart due to atmospheric stress before impact.</p>
+                                            <p className="max-w-xs">Whether the Meteorite broke apart due to atmospheric stress before impact.</p>
                                         </TooltipContent>
                                     </Tooltip>
                                 </div>
@@ -1162,16 +1162,16 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmitSimulate)} className="space-y-4">
 
-                            <h1 className='text-2xl font-bold text-black'>Simulation of Meteoroid Impact</h1>
+                            <h1 className='text-2xl font-bold text-black'>Simulation of Meteorite Impact</h1>
                             <br />
 
                             <FormField
                                 control={form.control}
-                                name="selectedNasaMeteoroid"
+                                name="selectedNasaMeteorite"
                                 render={({ field }) => (
                                     <FormItem>
                                         <div className="flex items-center gap-2">
-                                            <FormLabel>NASA Meteoroids</FormLabel>
+                                            <FormLabel>NASA Meteorites</FormLabel>
                                             <Tooltip>
                                                 <TooltipTrigger asChild>
                                                     <GraduationCap className="h-4 w-4 text-blue-600 cursor-help" />
@@ -1185,7 +1185,7 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
                                             <Select
                                                 onValueChange={(value) => {
                                                     field.onChange(value)
-                                                    const selected = nasaMeteoroidsData.find(m => m.name === value)
+                                                    const selected = nasaMeteoritesData.find(m => m.name === value)
                                                     if (selected && selected.id) {
                                                         // Guardar el ID y nombre del meteorito seleccionado
                                                         setSelectedNasaId(String(selected.id))
@@ -1194,25 +1194,25 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
                                                         // Limpiar selección de meteoritos guardados
                                                         setSelectedSavedId(null)
                                                         setSelectedSavedName(null)
-                                                        form.setValue('selectedSavedMeteoroid', undefined)
-                                                        toast.info(`NASA meteoroid selected: ${selected.name}`, { duration: 3000 })
+                                                        form.setValue('selectedSavedMeteorite', undefined)
+                                                        toast.info(`NASA Meteorite selected: ${selected.name}`, { duration: 3000 })
                                                     }
                                                 }}
                                                 defaultValue={field.value}
                                                 disabled={!!selectedSavedId || loading}
                                             >
                                                 <SelectTrigger className="w-[180px]">
-                                                    <SelectValue placeholder={loading ? "Loading..." : selectedSavedId ? "Disabled - Saved selected" : "Select NASA meteoroid"} />
+                                                    <SelectValue placeholder={loading ? "Loading..." : selectedSavedId ? "Disabled - Saved selected" : "Select NASA Meteorite"} />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    {nasaMeteoroidsData.length === 0 ? (
+                                                    {nasaMeteoritesData.length === 0 ? (
                                                         <SelectItem value="none" disabled>
-                                                            No NASA meteoroids
+                                                            No NASA Meteorites
                                                         </SelectItem>
                                                     ) : (
-                                                        nasaMeteoroidsData.map((meteoroid) => (
-                                                            <SelectItem key={meteoroid.id || meteoroid.name} value={meteoroid.name}>
-                                                                {meteoroid.name}
+                                                        nasaMeteoritesData.map((Meteorite) => (
+                                                            <SelectItem key={Meteorite.id || Meteorite.name} value={Meteorite.name}>
+                                                                {Meteorite.name}
                                                             </SelectItem>
                                                         ))
                                                     )}
@@ -1220,7 +1220,7 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
                                             </Select>
                                         </FormControl>
                                         <FormDescription>
-                                            Use real models from NASA ({nasaMeteoroidsData.length} loaded)
+                                            Use real models from NASA ({nasaMeteoritesData.length} loaded)
                                         </FormDescription>
                                         {nasaHasMore && (
                                             <Button
@@ -1253,17 +1253,17 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
 
                             <FormField
                                 control={form.control}
-                                name="selectedSavedMeteoroid"
+                                name="selectedSavedMeteorite"
                                 render={({ field }) => (
                                     <FormItem>
                                         <div className="flex items-center gap-2">
-                                            <FormLabel>Saved Meteoroids</FormLabel>
+                                            <FormLabel>Saved Meteorites</FormLabel>
                                             <Tooltip>
                                                 <TooltipTrigger asChild>
                                                     <GraduationCap className="h-4 w-4 text-green-600 cursor-help" />
                                                 </TooltipTrigger>
                                                 <TooltipContent>
-                                                    <p className="max-w-xs">Choose from custom meteoroids you've created and saved. These include your personalized parameters for radius, velocity, angle, and material composition.</p>
+                                                    <p className="max-w-xs">Choose from custom Meteorites you've created and saved. These include your personalized parameters for radius, velocity, angle, and material composition.</p>
                                                 </TooltipContent>
                                             </Tooltip>
                                         </div>
@@ -1271,7 +1271,7 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
                                             <Select
                                                 onValueChange={(value) => {
                                                     field.onChange(value)
-                                                    const selected = savedMeteoroidsData.find(m => m.name === value)
+                                                    const selected = savedMeteoritesData.find(m => m.name === value)
                                                     if (selected) {
                                                         // Guardar el ID y nombre del meteorito guardado
                                                         setSelectedSavedId(String(selected.id))
@@ -1279,30 +1279,30 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
                                                         // Limpiar selección de NASA
                                                         setSelectedNasaId(null)
                                                         setSelectedNasaName(null)
-                                                        form.setValue('selectedNasaMeteoroid', undefined)
+                                                        form.setValue('selectedNasaMeteorite', undefined)
 
-                                                        loadMeteoroidData(selected)
+                                                        loadMeteoriteData(selected)
                                                         if (selected.lat && selected.lng) {
                                                             setMapLocation(selected.lat, selected.lng)
                                                         }
-                                                        toast.info(`Saved meteoroid selected: ${selected.name}`)
+                                                        toast.info(`Saved Meteorite selected: ${selected.name}`)
                                                     }
                                                 }}
                                                 defaultValue={field.value}
                                                 disabled={!!selectedNasaId || loading}
                                             >
                                                 <SelectTrigger className="w-[180px]">
-                                                    <SelectValue placeholder={loading ? "Loading..." : selectedNasaId ? "Disabled - NASA selected" : "Select saved meteoroid"} />
+                                                    <SelectValue placeholder={loading ? "Loading..." : selectedNasaId ? "Disabled - NASA selected" : "Select saved Meteorite"} />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    {savedMeteoroidsData.length === 0 ? (
+                                                    {savedMeteoritesData.length === 0 ? (
                                                         <SelectItem value="none" disabled>
-                                                            No saved meteoroids
+                                                            No saved Meteorites
                                                         </SelectItem>
                                                     ) : (
-                                                        savedMeteoroidsData.map((meteoroid) => (
-                                                            <SelectItem key={meteoroid.id || meteoroid.name} value={meteoroid.name}>
-                                                                {meteoroid.name}
+                                                        savedMeteoritesData.map((Meteorite) => (
+                                                            <SelectItem key={Meteorite.id || Meteorite.name} value={Meteorite.name}>
+                                                                {Meteorite.name}
                                                             </SelectItem>
                                                         ))
                                                     )}
@@ -1310,7 +1310,7 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
                                             </Select>
                                         </FormControl>
                                         <FormDescription>
-                                            Use your saved meteoroids
+                                            Use your saved Meteorites
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
@@ -1329,7 +1329,7 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
                                                     <GraduationCap className="h-4 w-4 text-purple-600 cursor-help" />
                                                 </TooltipTrigger>
                                                 <TooltipContent>
-                                                    <p className="max-w-xs">Select a preset location or click anywhere on the map to choose your impact site. This determines where the meteoroid will strike Earth.</p>
+                                                    <p className="max-w-xs">Select a preset location or click anywhere on the map to choose your impact site. This determines where the Meteorite will strike Earth.</p>
                                                 </TooltipContent>
                                             </Tooltip>
                                         </div>
@@ -1395,3 +1395,4 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
 }
 
 export default FormTesting
+

@@ -46,7 +46,7 @@ Our mission is to educate and inspire the next generation of space scientists by
 
 ### 🎓 NASA Academy
 - **Structured learning path** with 3 comprehensive lessons:
-  1. **Understanding Meteoroid Radius** (12 min, Beginner)
+  1. **Understanding Meteorite Radius** (12 min, Beginner)
      - Cubic relationship between radius and mass
      - Real-world examples: Chelyabinsk, Tunguska
   2. **Impact Velocity and Kinetic Energy** (15 min, Beginner)
@@ -160,7 +160,7 @@ Our mission is to educate and inspire the next generation of space scientists by
 ### Running Simulations
 
 1. **Navigate to Simulator**: Click "Try Simulation" from the landing page
-2. **Select Meteoroid**: Choose from NASA database or create custom
+2. **Select Meteorite**: Choose from NASA database or create custom
 3. **Set Parameters**:
    - Radius: 1-100+ meters
    - Velocity: 11-72 km/s (cosmic speeds)
@@ -217,3 +217,4 @@ This project is licensed under the MIT License.
   **Educating the world about space, one impact at a time** 🚀
   
 </div>
+

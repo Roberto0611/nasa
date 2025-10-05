@@ -129,14 +129,14 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
                     console.log("✅ Datos guardados exitosamente en Laravel")
 
                     // Mostrar toast de éxito
-                    toast.success(`Meteoroid "${data.namemeteroid}" saved successfully!`)
+                    toast.success(`Meteorite "${data.namemeteroid}" saved successfully!`)
 
                     // Opcional: guardar también en localStorage
                     localStorage.setItem('meteroidData', JSON.stringify(data))
                 },
                 onError: (errors) => {
                     console.error("❌ Error al guardar en Laravel:", errors)
-                    toast.error("Error saving meteoroid data")
+                    toast.error("Error saving Meteorite data")
                 },
                 onFinish: () => {
                     console.log("🔄 Petición completada")
@@ -154,7 +154,7 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmitSave)} className="space-y-4">
 
-                    <h1 className='text-2xl font-bold text-black'> Create your Meteroid</h1>
+                    <h1 className='text-2xl font-bold text-black'> Create your Meteorite</h1>
 
 
                     <FormField
@@ -163,25 +163,25 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
                         render={({ field }) => (
                             <FormItem>
                                 <div className="flex items-center gap-2">
-                                    <FormLabel>Name of the meteoroid</FormLabel>
+                                    <FormLabel>Name of the Meteorite</FormLabel>
                                     <Tooltip>
                                         <TooltipTrigger asChild>
                                             <GraduationCap className="h-4 w-4 text-blue-600 cursor-help" />
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                            <p className="max-w-xs">Give your meteoroid a unique name to identify it. This helps you track and manage multiple meteoroid simulations.</p>
+                                            <p className="max-w-xs">Give your Meteorite a unique name to identify it. This helps you track and manage multiple Meteorite simulations.</p>
                                         </TooltipContent>
                                     </Tooltip>
                                 </div>
                                 <FormControl>
                                     <Input
                                         type="text"
-                                        placeholder="Enter meteoroid name"
+                                        placeholder="Enter Meteorite name"
                                         {...field}
                                     />
                                 </FormControl>
                                 <FormDescription>
-                                    Enter the name of the meteoroid
+                                    Enter the name of the Meteorite
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
@@ -195,13 +195,13 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
 
                             <FormItem>
                                 <div className="flex items-center gap-2">
-                                    <FormLabel>Radius of the meteoroid (m)</FormLabel>
+                                    <FormLabel>Radius of the Meteorite (m)</FormLabel>
                                     <Tooltip>
                                         <TooltipTrigger asChild>
                                             <GraduationCap className="h-4 w-4 text-blue-600 cursor-help" />
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                            <p className="max-w-xs">The radius determines the size of your meteoroid. Larger meteoroids (100+ meters) cause more significant impacts, while smaller ones may burn up in the atmosphere.</p>
+                                            <p className="max-w-xs">The radius determines the size of your Meteorite. Larger Meteorites (100+ meters) cause more significant impacts, while smaller ones may burn up in the atmosphere.</p>
                                         </TooltipContent>
                                     </Tooltip>
                                 </div>
@@ -217,7 +217,7 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
                                     />
                                 </FormControl>
                                 <FormDescription>
-                                    Enter the radius of the meteoroid in meters
+                                    Enter the radius of the Meteorite in meters
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
@@ -236,7 +236,7 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
                                             <GraduationCap className="h-4 w-4 text-blue-600 cursor-help" />
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                            <p className="max-w-xs">Meteoroids enter Earth's atmosphere at speeds between 11-72 km/s (11,000-72,000 m/s). Higher velocities create more intense impacts and atmospheric heating.</p>
+                                            <p className="max-w-xs">Meteorites enter Earth's atmosphere at speeds between 11-72 km/s (11,000-72,000 m/s). Higher velocities create more intense impacts and atmospheric heating.</p>
                                         </TooltipContent>
                                     </Tooltip>
                                 </div>
@@ -252,7 +252,7 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
                                     />
                                 </FormControl>
                                 <FormDescription>
-                                    Enter the velocity of the meteoroid in meters per second
+                                    Enter the velocity of the Meteorite in meters per second
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
@@ -271,7 +271,7 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
                                             <GraduationCap className="h-4 w-4 text-blue-600 cursor-help" />
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                            <p className="max-w-xs">Entry angle is measured from horizontal. 90° is vertical impact (most destructive), while shallow angles (15-30°) cause the meteoroid to travel farther through the atmosphere.</p>
+                                            <p className="max-w-xs">Entry angle is measured from horizontal. 90° is vertical impact (most destructive), while shallow angles (15-30°) cause the Meteorite to travel farther through the atmosphere.</p>
                                         </TooltipContent>
                                     </Tooltip>
                                 </div>
@@ -300,13 +300,13 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
                         render={({ field }) => (
                             <FormItem>
                                 <div className="flex items-center gap-2">
-                                    <FormLabel>Material of the meteoroid</FormLabel>
+                                    <FormLabel>Material of the Meteorite</FormLabel>
                                     <Tooltip>
                                         <TooltipTrigger asChild>
                                             <GraduationCap className="h-4 w-4 text-blue-600 cursor-help" />
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                            <p className="max-w-xs">Material composition affects impact energy. Iron meteoroids are denser and more likely to reach the surface, while rocky ones may fragment in the atmosphere. Nickel meteoroids have intermediate properties.</p>
+                                            <p className="max-w-xs">Material composition affects impact energy. Iron Meteorites are denser and more likely to reach the surface, while rocky ones may fragment in the atmosphere. Nickel Meteorites have intermediate properties.</p>
                                         </TooltipContent>
                                     </Tooltip>
                                 </div>
@@ -326,7 +326,7 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
                                     </Select>
                                 </FormControl>
                                 <FormDescription>
-                                    Enter the material of the meteoroid
+                                    Enter the material of the Meteorite
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
@@ -352,3 +352,4 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
 }
 
 export default FormMeteroid
+

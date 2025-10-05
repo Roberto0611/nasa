@@ -7,7 +7,7 @@ import { toast } from 'sonner'
 import { Toaster } from '@/components/sonner'
 import { Link } from '@inertiajs/react'
 
-type MeteoroidRecord = {
+type MeteoriteRecord = {
     id?: number
     name: string
     radiusMeteroid?: number
@@ -24,8 +24,8 @@ type MeteoroidRecord = {
 }
 
 const MeteoritesPage = () => {
-    const [nasaMeteorites, setNasaMeteorites] = useState<MeteoroidRecord[]>([])
-    const [savedMeteorites, setSavedMeteorites] = useState<MeteoroidRecord[]>([])
+    const [nasaMeteorites, setNasaMeteorites] = useState<MeteoriteRecord[]>([])
+    const [savedMeteorites, setSavedMeteorites] = useState<MeteoriteRecord[]>([])
     const [loading, setLoading] = useState(true)
     const [loadingMore, setLoadingMore] = useState(false)
     const [activeTab, setActiveTab] = useState<'nasa' | 'saved'>('nasa')
@@ -54,7 +54,7 @@ const MeteoritesPage = () => {
             const data = result.data || []
             const pagination = result.pagination || {}
 
-            const mappedData: MeteoroidRecord[] = data.map((item: any) => ({
+            const mappedData: MeteoriteRecord[] = data.map((item: any) => ({
                 id: item.id,
                 name: item.name,
                 mass: item.mass,
@@ -98,7 +98,7 @@ const MeteoritesPage = () => {
             if (!response.ok) throw new Error('Failed to fetch saved meteorites')
 
             const data = await response.json()
-            const mappedData: MeteoroidRecord[] = data.map((item: any) => ({
+            const mappedData: MeteoriteRecord[] = data.map((item: any) => ({
                 id: item.id,
                 name: item.name,
                 radiusMeteroid: item.radius,
@@ -131,7 +131,7 @@ const MeteoritesPage = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <h1 className="text-4xl font-bold mb-2">Meteorites Database</h1>
-                            <p className="text-gray-400">Explore NASA's collection and user-created meteoroids</p>
+                            <p className="text-gray-400">Explore NASA's collection and user-created Meteorites</p>
                         </div>
                         <Link href="/">
                             <button className="px-6 py-3 bg-white text-black hover:bg-gray-200 rounded-lg font-semibold transition">
@@ -332,3 +332,4 @@ const MeteoritesPage = () => {
 }
 
 export default MeteoritesPage
+
