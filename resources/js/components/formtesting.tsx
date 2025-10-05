@@ -981,70 +981,81 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
 
                         {/* Botones de acción mejorados */}
                         <div className="space-y-3 pt-2">
-                            {/* Botón de Análisis con IA - NUEVO */}
+                            {/* Botón de Análisis con IA - Diseño Profesional */}
                             <Button
                                 type="button"
                                 onClick={() => setShowAIAnalysis(true)}
                                 variant="outline"
-                                className="w-full bg-white text-black border-2 border-gray-300 hover:bg-gray-50 flex items-center justify-center gap-2 py-4 font-semibold"
+                                className="w-full bg-gradient-to-r from-slate-900 to-slate-800 text-white border-slate-700 hover:from-slate-800 hover:to-slate-700 flex items-center justify-center gap-3 py-6 font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
                             >
-                                <span>🤖</span>
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                </svg>
                                 AI Impact Analysis + Defense Strategies
                             </Button>
 
-                            {/* Botón principal de compartir */}
+                            {/* Botón principal de compartir - Diseño Profesional */}
                             <Button
                                 type="button"
                                 onClick={() => setShowShareButtons(!showShareButtons)}
                                 variant="outline"
-                                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0 hover:from-blue-700 hover:to-purple-700 flex items-center justify-center gap-2 py-6 text-lg font-bold"
+                                className="w-full bg-white text-slate-900 border-2 border-slate-200 hover:bg-slate-50 hover:border-slate-300 flex items-center justify-center gap-3 py-6 font-semibold shadow-md hover:shadow-lg transition-all duration-200"
                             >
-                                <Share2 size={24} />
-                                {showShareButtons ? 'Hide Share Options' : '✨ Share Your Impact Simulation'}
+                                <Share2 size={20} />
+                                {showShareButtons ? 'Hide Share Options' : 'Share Your Impact Simulation'}
                             </Button>
 
-                            {/* Opciones de compartir con animación */}
+                            {/* Opciones de compartir con animación - Diseño Profesional */}
                             {showShareButtons && (
-                                <div className="space-y-2 animate-in slide-in-from-top duration-300">
-                                    <div className="bg-gradient-to-r from-slate-800 to-slate-900 p-4 rounded-lg border-2 border-blue-500">
-                                        <p className="text-white text-sm mb-3 font-semibold">
-                                            📸 Your simulation will be converted to a professional NASA-style image card!
-                                        </p>
+                                <div className="space-y-3 animate-in slide-in-from-top duration-300">
+                                    <div className="bg-white border-2 border-slate-200 p-5 rounded-lg shadow-md">
+                                        <div className="flex items-start gap-3 mb-4 p-3 bg-slate-50 rounded-md border border-slate-200">
+                                            <svg className="w-5 h-5 text-slate-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <p className="text-slate-700 text-sm font-medium">
+                                                Your simulation will be converted to a professional NASA-style image card
+                                            </p>
+                                        </div>
 
-                                        <div className="grid grid-cols-2 gap-2 mb-3">
+                                        <div className="grid grid-cols-2 gap-3 mb-4">
                                             <Button
                                                 type="button"
                                                 onClick={shareToWhatsApp}
-                                                className="bg-green-500 hover:bg-green-600 text-white flex items-center justify-center gap-2 py-4"
+                                                variant="outline"
+                                                className="border-2 border-green-200 bg-green-50 hover:bg-green-100 text-green-700 hover:text-green-800 flex items-center justify-center gap-2 py-5 font-medium transition-all"
                                             >
-                                                <MessageCircle size={20} />
+                                                <MessageCircle size={18} />
                                                 WhatsApp
                                             </Button>
 
                                             <Button
                                                 type="button"
                                                 onClick={shareToInstagram}
-                                                className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 text-white flex items-center justify-center gap-2 py-4"
+                                                variant="outline"
+                                                className="border-2 border-pink-200 bg-pink-50 hover:bg-pink-100 text-pink-700 hover:text-pink-800 flex items-center justify-center gap-2 py-5 font-medium transition-all"
                                             >
-                                                <Instagram size={20} />
+                                                <Instagram size={18} />
                                                 Instagram
                                             </Button>
 
                                             <Button
                                                 type="button"
                                                 onClick={shareToTwitter}
-                                                className="bg-black hover:bg-gray-800 text-white flex items-center justify-center gap-2 py-4"
+                                                variant="outline"
+                                                className="border-2 border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-900 flex items-center justify-center gap-2 py-5 font-medium transition-all"
                                             >
-                                                <Twitter size={20} />
+                                                <Twitter size={18} />
                                                 Twitter/X
                                             </Button>
 
                                             <Button
                                                 type="button"
                                                 onClick={shareToFacebook}
-                                                className="bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2 py-4"
+                                                variant="outline"
+                                                className="border-2 border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 hover:text-blue-800 flex items-center justify-center gap-2 py-5 font-medium transition-all"
                                             >
-                                                <Facebook size={20} />
+                                                <Facebook size={18} />
                                                 Facebook
                                             </Button>
                                         </div>
@@ -1052,81 +1063,97 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
                                         <Button
                                             type="button"
                                             onClick={downloadImage}
-                                            variant="outline"
-                                            className="w-full bg-purple-600 hover:bg-purple-700 text-white border-0 font-bold py-4"
+                                            className="w-full bg-slate-900 hover:bg-slate-800 text-white border-0 font-semibold py-5 shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
                                         >
-                                            🎨 Download Professional Impact Card
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                            </svg>
+                                            Download Professional Impact Card
                                         </Button>
                                     </div>
                                 </div>
                             )}
 
-                            {/* Guía visual de Instagram */}
+                            {/* Guía visual de Instagram - Diseño Profesional */}
                             {showInstagramGuide && (
-                                <div className="bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 p-6 rounded-lg shadow-2xl animate-in slide-in-from-bottom border-4 border-white">
-                                    <div className="flex justify-between items-start mb-4">
-                                        <h3 className="text-white font-bold text-xl flex items-center gap-2">
-                                            <Instagram size={28} />
-                                            How to Post on Instagram
-                                        </h3>
+                                <div className="bg-white border-2 border-pink-200 p-6 rounded-lg shadow-lg animate-in slide-in-from-bottom">
+                                    <div className="flex justify-between items-start mb-5">
+                                        <div className="flex items-center gap-3">
+                                            <div className="bg-gradient-to-br from-purple-500 to-pink-500 p-2 rounded-lg">
+                                                <Instagram size={24} className="text-white" />
+                                            </div>
+                                            <h3 className="text-slate-900 font-bold text-lg">
+                                                How to Post on Instagram
+                                            </h3>
+                                        </div>
                                         <button
                                             onClick={() => setShowInstagramGuide(false)}
-                                            className="text-white hover:text-gray-200 text-2xl font-bold"
+                                            className="text-slate-400 hover:text-slate-600 transition-colors"
                                         >
-                                            ✕
+                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
                                         </button>
                                     </div>
 
-                                    <div className="space-y-3 text-white">
-                                        <div className="flex items-start gap-3 bg-white/20 p-3 rounded-lg backdrop-blur">
-                                            <span className="text-2xl font-bold bg-white text-purple-600 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">1</span>
+                                    <div className="space-y-3">
+                                        <div className="flex items-start gap-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                            <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold">1</div>
                                             <div>
-                                                <p className="font-semibold">Image Downloaded ✅</p>
-                                                <p className="text-sm">Check your Downloads folder for the NASA impact card</p>
+                                                <p className="font-semibold text-slate-900">Image Downloaded</p>
+                                                <p className="text-sm text-slate-600 mt-1">Check your Downloads folder for the NASA impact card</p>
                                             </div>
                                         </div>
 
-                                        <div className="flex items-start gap-3 bg-white/20 p-3 rounded-lg backdrop-blur">
-                                            <span className="text-2xl font-bold bg-white text-pink-600 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">2</span>
+                                        <div className="flex items-start gap-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                                            <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold">2</div>
                                             <div>
-                                                <p className="font-semibold">Caption Copied 📋</p>
-                                                <p className="text-sm">Your caption is ready in the clipboard</p>
+                                                <p className="font-semibold text-slate-900">Caption Copied</p>
+                                                <p className="text-sm text-slate-600 mt-1">Your caption is ready in the clipboard</p>
                                             </div>
                                         </div>
 
-                                        <div className="flex items-start gap-3 bg-white/20 p-3 rounded-lg backdrop-blur">
-                                            <span className="text-2xl font-bold bg-white text-orange-600 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">3</span>
+                                        <div className="flex items-start gap-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                                            <div className="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold">3</div>
                                             <div>
-                                                <p className="font-semibold">Open Instagram 📱</p>
-                                                <p className="text-sm">Tap the + button to create a new post</p>
+                                                <p className="font-semibold text-slate-900">Open Instagram</p>
+                                                <p className="text-sm text-slate-600 mt-1">Tap the + button to create a new post</p>
                                             </div>
                                         </div>
 
-                                        <div className="flex items-start gap-3 bg-white/20 p-3 rounded-lg backdrop-blur">
-                                            <span className="text-2xl font-bold bg-white text-purple-600 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">4</span>
+                                        <div className="flex items-start gap-4 p-4 bg-pink-50 border border-pink-200 rounded-lg">
+                                            <div className="bg-pink-500 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold">4</div>
                                             <div>
-                                                <p className="font-semibold">Upload & Paste 🚀</p>
-                                                <p className="text-sm">Select your downloaded image, then paste the caption (long press on caption field)</p>
+                                                <p className="font-semibold text-slate-900">Upload & Paste</p>
+                                                <p className="text-sm text-slate-600 mt-1">Select your image, then paste the caption (long press on caption field)</p>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="mt-4 bg-white/30 p-3 rounded-lg backdrop-blur">
-                                        <p className="text-white text-sm font-semibold text-center">
-                                            💡 Pro tip: Tag @nasa and use #SpaceApps for maximum visibility!
-                                        </p>
+                                    <div className="mt-4 p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                                        <div className="flex items-start gap-3">
+                                            <svg className="w-5 h-5 text-slate-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                            </svg>
+                                            <p className="text-slate-700 text-sm font-medium">
+                                                <strong>Pro tip:</strong> Tag @nasa and use #SpaceApps for maximum visibility!
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             )}
 
-                            {/* Botón de nueva simulación */}
+                            {/* Botón de nueva simulación - Diseño Profesional */}
                             <Button
                                 type="button"
                                 onClick={resetSimulation}
-                                variant="default"
-                                className="w-full text-black border-black hover:bg-black hover:text-white py-4"
+                                variant="outline"
+                                className="w-full bg-white text-slate-700 border-2 border-slate-300 hover:bg-slate-100 hover:border-slate-400 hover:text-slate-900 py-5 font-semibold shadow-sm transition-all flex items-center justify-center gap-2"
                             >
-                                🔄 New Simulation
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                New Simulation
                             </Button>
                         </div>
                     </div>
