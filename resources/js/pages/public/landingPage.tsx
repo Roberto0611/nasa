@@ -24,11 +24,9 @@ const LandingPage = () => {
             {/* Navigation */}
             <nav className={`fixed w-full z-50 transition-all duration-300 ${scrollY > 50 ? 'bg-black/90 backdrop-blur-md border-b border-gray-700' : 'bg-transparent'}`}>
                 <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-                    <div className="flex items-center space-x-2">
-                        <a href="https://www.nasa.gov" target="_blank" rel="noopener noreferrer" className="transition hover:opacity-80">
-                            <img src="https://www.nasa.gov/wp-content/themes/nasa/assets/images/nasa-logo.svg" alt="NASA Logo" className="h-12 w-12" />
-                        </a>
-                        <span className="text-2xl font-bold">NASA Academy</span>
+                    <div className="flex items-center space-x-3">
+                        <img src="/meteorica.png" alt="Meteorica Logo" className="h-24 w-auto" />
+                        <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">Meteorica</span>
                     </div>
                     <ul className="hidden md:flex space-x-8">
                         <li><a href="#home" className="hover:text-gray-300 transition">Home</a></li>
