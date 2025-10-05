@@ -43,8 +43,6 @@ const LandingPage = () => {
                             </Link>
                         </li>
                         <li><a href="#nasabot" className="hover:text-gray-300 transition">NASAbot AI</a></li>
-                        <li><a href="#about" className="hover:text-gray-300 transition">About</a></li>
-                        <li><a href="#contact" className="hover:text-gray-300 transition">Contact</a></li>
                     </ul>
                     <button className="md:hidden text-white">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -199,14 +197,6 @@ const LandingPage = () => {
                                     </div>
                                     <p className="text-gray-400 text-sm mb-3">{formula.description}</p>
                                     <p className="text-gray-500 text-xs italic">{formula.variables}</p>
-                                    <Link href="/formulas">
-                                        <button className="mt-4 text-white hover:text-gray-300 font-semibold flex items-center gap-2 group text-sm">
-                                            Learn More
-                                            <svg className="w-4 h-4 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                            </svg>
-                                        </button>
-                                    </Link>
                                 </div>
                             </motion.div>
                         ))}
@@ -528,8 +518,6 @@ const LandingPage = () => {
                             <ul className="space-y-2 text-gray-500">
                                 <li><a href="#" className="hover:text-white transition">About Us</a></li>
                                 <li><a href="#" className="hover:text-white transition">Our Mission</a></li>
-                                <li><a href="#" className="hover:text-white transition">Instructors</a></li>
-                                <li><a href="#" className="hover:text-white transition">Contact</a></li>
                             </ul>
                         </div>
                         <div>
