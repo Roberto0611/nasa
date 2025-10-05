@@ -5,6 +5,7 @@ import React, { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'  // Contenedor 3D
 import Earth from '../../../assets/Planets/earth'  // Componente de la Tierra con texturas reales
 import { LoginForm } from '../../components/menu'  // Componente de navegación/menú
+import { Toaster } from '@/components/sonner'  // Sistema de notificaciones toast
 /**
  * Página principal de la aplicación
  * 
@@ -66,6 +67,7 @@ const HomePage = () => {
                 </div>
 
             </div>
+            <Toaster />
         </Suspense>
     )
 }
