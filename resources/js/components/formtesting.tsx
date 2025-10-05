@@ -979,8 +979,8 @@ This was created with Meteorica for NASA Space Apps Challenge using real NASA NE
                             </div>
                         </div>
 
-                        {/* Botones de acción mejorados */}
-                        <div className="space-y-3 pt-2">
+                        {/* Botones de acción mejorados - FIJOS EN LA PARTE INFERIOR */}
+                        <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-80 space-y-3 z-[1000]">
                             {/* Botón de Análisis con IA - Diseño Profesional */}
                             <Button
                                 type="button"
