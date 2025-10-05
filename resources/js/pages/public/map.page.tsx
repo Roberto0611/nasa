@@ -427,33 +427,9 @@ const MapPage = () => {
                                 radius={radiusEnergy * 2}
                                 bubblingMouseEvents={false}
                             >
-                                <Popup>Radio de impacto calculado: {(radiusEnergy * 2).toFixed(0)} metros</Popup>
+                                <Popup>Diametro del cráter calculado: {(radiusEnergy * 2).toFixed(0)} metros</Popup>
                             </Circle>
-                        </LayersControl.Overlay>
-
-                        <LayersControl.Overlay checked name="Zona de destrucción severa">
-                            <Circle
-                                center={impactCenter}
-                                pathOptions={redOptions}
-                                radius={radiusEnergy}
-                                bubblingMouseEvents={false}
-                            >
-                                <Popup>Zona de destrucción severa: {(radiusEnergy).toFixed(0)} metros</Popup>
-                            </Circle>
-                        </LayersControl.Overlay>
-
-                        <LayersControl.Overlay checked name="Epicentro del impacto">
-                            <LayerGroup>
-                                <Circle
-                                    center={impactCenter}
-                                    pathOptions={blackOptions}
-                                    radius={radiusEnergy / 2}
-                                    bubblingMouseEvents={false}
-                                >
-                                    <Popup>Epicentro: {(radiusEnergy / 2).toFixed(0)} metros</Popup>
-                                </Circle>
-                                <DraggableMarker />
-                            </LayerGroup>
+                            <DraggableMarker />
                         </LayersControl.Overlay>
                     </LayersControl>
                 )}
