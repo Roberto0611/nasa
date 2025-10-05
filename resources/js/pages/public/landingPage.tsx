@@ -71,6 +71,11 @@ const LandingPage = () => {
                                 Start Learning
                             </button>
                         </Link>
+                        <Link href="/sim">
+                            <button className="px-8 py-4 bg-white text-black hover:bg-gray-200 rounded-full font-semibold transition transform hover:scale-105">
+                                Try Simulation
+                            </button>
+                        </Link>
 
                     </div>
                 </motion.div>
@@ -253,7 +258,7 @@ const LandingPage = () => {
                             </ul>
 
                             <div className="flex gap-4">
-                                <Link href="/home">
+                                <Link href="/sim">
                                     <button className="px-6 py-3 bg-white text-black hover:bg-gray-200 rounded-lg font-semibold transition transform hover:scale-105">
                                         Launch Simulator
                                     </button>
