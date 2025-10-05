@@ -411,7 +411,7 @@ const FormTesting = () => {
             ctx.fillText(`Breakup Altitude: ${breakupAlt}`, 650, yPos + 130)
 
             // Gráfico circular de energía
-            const centerX = 950
+            const centerX = 1050
             const centerY = yPos + 110
             const radius = 60
             const energyPercent = parseFloat(energyRemaining) / 100
