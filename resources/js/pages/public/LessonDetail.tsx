@@ -252,7 +252,7 @@ const LessonDetail: React.FC<LessonDetailProps> = ({ lesson }) => {
             {/* Footer */}
             <footer className="bg-black border-t border-gray-800 py-8">
                 <div className="container mx-auto px-6 text-center text-gray-600">
-                    <p>&copy; 2025 NASA Academy. Educational platform for Space Apps Challenge.</p>
+                    <p>&copy; 2025 Meteorica. Asteroid impact simulation platform powered by NASA data.</p>
                 </div>
             </footer>
         </div>

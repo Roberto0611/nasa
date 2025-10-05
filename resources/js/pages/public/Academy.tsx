@@ -48,9 +48,9 @@ const Academy: React.FC<AcademyProps> = ({ lessons }) => {
             {/* Navigation */}
             <nav className="fixed w-full z-50 bg-black/90 backdrop-blur-md border-b border-gray-700">
                 <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-                    <Link href="/" className="flex items-center space-x-2">
-                        <img src="https://www.nasa.gov/wp-content/themes/nasa/assets/images/nasa-logo.svg" alt="NASA Logo" className="h-12 w-12" />
-                        <span className="text-2xl font-bold">NASA Academy</span>
+                    <Link href="/" className="flex items-center space-x-3">
+                        <img src="/meteorica.png" alt="Meteorica Logo" className="h-24 w-auto" />
+                        <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">Meteorica</span>
                     </Link>
                     <div className="flex gap-4">
                         <Link href="/">
@@ -79,7 +79,7 @@ const Academy: React.FC<AcademyProps> = ({ lessons }) => {
                             <span className="text-6xl">🎓</span>
                         </div>
                         <h1 className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-blue-200 to-purple-200 text-transparent bg-clip-text">
-                            NASA Academy
+                            Meteorica Academy
                         </h1>
                         <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-8">
                             Master the physics of meteorite impacts through interactive lessons and hands-on simulations
@@ -197,7 +197,7 @@ const Academy: React.FC<AcademyProps> = ({ lessons }) => {
             {/* Footer */}
             <footer className="bg-black border-t border-gray-800 py-8 mt-20">
                 <div className="container mx-auto px-6 text-center text-gray-600">
-                    <p>&copy; 2025 NASA Academy. Educational platform for Space Apps Challenge.</p>
+                    <p>&copy; 2025 Meteorica. Asteroid impact simulation platform powered by NASA data.</p>
                 </div>
             </footer>
         </div>
