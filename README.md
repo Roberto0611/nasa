@@ -72,6 +72,13 @@ Our mission is to educate and inspire the next generation of space scientists by
 
 ### 🤖 NASAbot AI Assistant
 - **Powered by Google Gemini AI** for intelligent responses
+- **🎯 AI Impact Analysis** (NEW!):
+  - Comprehensive post-simulation analysis
+  - Historical comparisons with real events (Tunguska, Chelyabinsk, Chicxulub)
+  - Threat level assessment (Insignificant → Catastrophic)
+  - Detailed effects analysis (blast radius, thermal effects, tsunamis)
+  - Mitigation strategies and deflection recommendations
+  - Beautiful markdown-formatted reports with visualizations
 - **Context-aware explanations** of simulation results
 - **Educational Q&A** about:
   - Atmospheric physics (f_atm parameter)
