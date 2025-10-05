@@ -10,6 +10,8 @@ import MapPage from './map.page'
 import FormTesting from '@/components/formtesting'
 import { MeteroidProvider, useMeteroidContext } from '../../context/MeteroidContext'  // Proveedor del contexto
 import { Toaster } from '@/components/sonner'  // Sistema de notificaciones toast
+import FloatingChat from '../../components/FloatingChat'  // Chat flotante de NASAbot
+import ChatToggleButton from '../../components/ChatToggleButton'  // Botón para abrir/cerrar chat
 
 /**
  * Componente wrapper que obtiene datos del contexto y los pasa al Canvas
@@ -43,6 +45,13 @@ const PlanetCanvasWrapper = () => {
 const SimulationPage = () => {
     // Estado para controlar qué sección mostrar
     const [activeSection, setActiveSection] = useState<'simulation' | 'analysis'>('simulation')
+    
+    // Estado para controlar el chat flotante
+    const [isChatOpen, setIsChatOpen] = useState(false)
+
+    const toggleChat = () => {
+        setIsChatOpen(!isChatOpen)
+    }
 
     return (
         <MeteroidProvider>
@@ -153,6 +162,13 @@ const SimulationPage = () => {
                     </div>
                 )}
             </Suspense>
+            
+            {/* Chat flotante de NASAbot */}
+            <FloatingChat isOpen={isChatOpen} onToggle={toggleChat} />
+            
+            {/* Botón para abrir/cerrar el chat */}
+            <ChatToggleButton isOpen={isChatOpen} onClick={toggleChat} />
+            
             <Toaster />
         </MeteroidProvider>
     )
