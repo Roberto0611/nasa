@@ -349,9 +349,10 @@ class MeteoriteController extends Controller
         if ($h <= 0 && $crater_energy_J > 1e12) { // si impacta
             // Estimación empírica realista (Melosh/Holsapple)
             // Escala: 1e24 J ≈ 180 km de diámetro (Chicxulub)
-            $k = 1.8e3; // ajuste empírico para impactos terrestres
-            $crater_diameter_m = $k * pow($crater_energy_J / 1e21, 1.0 / 3.4);
-
+            $g = 9.81;
+            $rho_t = 2700;
+            $C = 1.3;
+            $crater_diameter_m = $C * pow($crater_energy_J / ($g * $rho_t), 0.25);
             // Clasificación rápida del impacto
             $impact_scale = 'minor';
             if ($crater_diameter_m > 100000) $impact_scale = 'global';

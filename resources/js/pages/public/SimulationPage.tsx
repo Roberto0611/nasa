@@ -136,9 +136,8 @@ const SimulationPage = () => {
                             boxSizing: 'border-box',
                             backgroundColor: 'white',
                             color: 'black',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center'
+                            overflowY: 'auto',
+                            overflowX: 'hidden'
                         }}>
                             <FormTesting />
                         </div>
