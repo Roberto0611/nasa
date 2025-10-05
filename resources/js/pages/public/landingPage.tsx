@@ -171,7 +171,7 @@ const LandingPage = () => {
                                 title: 'Atmospheric Pressure',
                                 formula: 'q = ½ × ρ × v²',
                                 description: 'Dynamic pressure that causes meteoroid fragmentation during entry',
-                                icon: '�',
+                                icon: 'P',
                                 variables: 'q = dynamic pressure, causes breakup when q > strength'
                             },
                             {
@@ -191,7 +191,7 @@ const LandingPage = () => {
                             >
                                 <div className="p-6">
                                     <div className="flex items-center gap-3 mb-4">
-                                        <span className="text-4xl">{formula.icon}</span>
+                                        <span className={`${formula.icon.length === 1 ? 'text-sm font-bold px-3 py-1 bg-blue-600 rounded-lg' : 'text-4xl'}`}>{formula.icon}</span>
                                         <h3 className="text-xl font-bold group-hover:text-gray-300 transition">{formula.title}</h3>
                                     </div>
                                     <div className="bg-black/50 rounded-lg p-4 mb-4 font-mono text-center border border-gray-600">
@@ -385,19 +385,19 @@ const LandingPage = () => {
                             </p>
                             <div className="grid md:grid-cols-3 gap-8 mt-12">
                                 <div className="p-6">
-                                    <div className="text-5xl mb-4">�</div>
-                                    <h3 className="text-xl font-bold mb-2">Expert Content</h3>
-                                    <p className="text-gray-400">Courses designed by NASA scientists and educators</p>
+                                    <div className="text-sm font-bold px-3 py-2 bg-blue-600 rounded-lg inline-block mb-4">DATA</div>
+                                    <h3 className="text-xl font-bold mb-2">Real NASA Data</h3>
+                                    <p className="text-gray-400">Simulations powered by authentic Near Earth Object database</p>
                                 </div>
                                 <div className="p-6">
-                                    <div className="text-5xl mb-4">�</div>
-                                    <h3 className="text-xl font-bold mb-2">Interactive Learning</h3>
-                                    <p className="text-gray-400">Hands-on simulations and real-world applications</p>
+                                    <div className="text-sm font-bold px-3 py-2 bg-purple-600 rounded-lg inline-block mb-4">SIM</div>
+                                    <h3 className="text-xl font-bold mb-2">Interactive Simulations</h3>
+                                    <p className="text-gray-400">Hands-on 3D impact modeling with real physics</p>
                                 </div>
                                 <div className="p-6">
-                                    <div className="text-5xl mb-4">🌐</div>
-                                    <h3 className="text-xl font-bold mb-2">Global Community</h3>
-                                    <p className="text-gray-400">Connect with learners worldwide</p>
+                                    <div className="text-sm font-bold px-3 py-2 bg-green-600 rounded-lg inline-block mb-4">GLOBE</div>
+                                    <h3 className="text-xl font-bold mb-2">Global Impact Map</h3>
+                                    <p className="text-gray-400">Visualize impacts anywhere on Earth</p>
                                 </div>
                             </div>
                         </motion.div>
@@ -521,32 +521,6 @@ const LandingPage = () => {
                             </Link>
                         </motion.div>
                     </div>
-                </div>
-            </section>
-
-            {/* Newsletter Section */}
-            <section id="contact" className="py-20 bg-gradient-to-r from-gray-900/50 to-black/50">
-                <div className="container mx-auto px-6">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        className="max-w-2xl mx-auto text-center"
-                    >
-                        <h2 className="text-4xl font-bold mb-4">Join Our Learning Community</h2>
-                        <p className="text-gray-500 mb-8">
-                            Subscribe to receive course updates, new learning materials, and exclusive space science content
-                        </p>
-                        <div className="flex flex-col md:flex-row gap-4 justify-center">
-                            <input
-                                type="email"
-                                placeholder="Enter your email"
-                                className="px-6 py-4 bg-white/10 border border-gray-600 rounded-lg focus:outline-none focus:border-white flex-1 max-w-md"
-                            />
-                            <button className="px-8 py-4 bg-white text-black hover:bg-gray-200 rounded-lg font-semibold transition">
-                                Subscribe
-                            </button>
-                        </div>
-                    </motion.div>
                 </div>
             </section>
 
