@@ -59,7 +59,7 @@ const LandingPage = () => {
                             </button>
                         </Link>
                         <Link href="/sim">
-                            <button className="px-8 py-4 bg-transparent border-2 border-white hover:bg-white hover:text-black rounded-full font-semibold transition transform hover:scale-105">
+                            <button className="px-8 py-4 bg-transparent border-2 border-white text-white hover:bg-white hover:text-black rounded-full font-semibold transition transform hover:scale-105">
                                 Try Simulator
                             </button>
                         </Link>
@@ -212,7 +212,7 @@ const LandingPage = () => {
                                     <span>Educational insights and analysis</span>
                                 </li>
                             </ul>
-                            <Link href="/sim">
+                            <Link href="/home">
                                 <button className="px-6 py-3 bg-white text-black hover:bg-gray-200 rounded-lg font-semibold transition transform hover:scale-105">
                                     Launch Simulator
                                 </button>

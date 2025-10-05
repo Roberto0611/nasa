@@ -8,7 +8,8 @@ import { router } from '@inertiajs/react'  // Para hacer peticiones a Laravel
 import { meteroidSchema } from '../../lib/meteroidSchema'
 import type { MeteroidFormData } from '../../lib/meteroidSchema'
 import { useMeteroidContext } from '../context/MeteroidContext'  // Contexto global
-import { Button } from "./button"  // Componente de botón
+
+import { Button } from "../components/ui/button"  // Componente de botón
 import {
     Form,
     FormControl,
@@ -119,11 +120,11 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
             router.post('/meteorites/store', data, {
                 onSuccess: (page) => {
                     console.log("✅ Datos guardados exitosamente en Laravel")
-                    
+
                     // Alerta de éxito
                     alert('¡Meteorito registrado exitosamente! ✅')
                     toast.success(`Meteoroid "${data.namemeteroid}" saved successfully!`)
-                    
+
                     // Opcional: guardar también en localStorage
                     localStorage.setItem('meteroidData', JSON.stringify(data))
                 },
@@ -146,7 +147,7 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmitSave)} className="space-y-4">
 
-                <h1 className='text-2xl font-bold'> Create your Meteroid</h1>
+                <h1 className='text-2xl font-bold text-black'> Create your Meteroid</h1>
 
 
                 <FormField
@@ -277,12 +278,12 @@ const FormMeteroid: React.FC<FormMeteroidProps> = ({ onActivateSimulation }) => 
 
                 <div style={{ display: 'flex', gap: '10px' }}>
                     <div>
-                        <Button type="submit" onClick={form.handleSubmit(onSubmitSave)}>
+                        <Button type="submit" variant="default" className="text-black border-black hover:bg-black hover:text-white" onClick={form.handleSubmit(onSubmitSave)}>
                             Save
                         </Button>
                     </div>
                     <div>
-                        <Button type="button" onClick={onSubmitNasaModels}>
+                        <Button type="button" variant="default" className="text-black border-black hover:bg-black hover:text-white" onClick={onSubmitNasaModels}>
                             Use real models of NASA
                         </Button>
                     </div>

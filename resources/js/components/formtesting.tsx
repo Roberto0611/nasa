@@ -61,13 +61,13 @@ const FormTesting = () => {
         setLoading(true)
         try {
             const response = await fetch('/getMeteoritesNames')
-            
+
             if (!response.ok) {
                 throw new Error('Failed to fetch NASA meteoroids')
             }
 
             const data = await response.json()
-            
+
             // Mapear los datos de NASA al formato que espera el componente
             const mappedData: MeteoroidRecord[] = data.map((item: any) => ({
                 id: item.id,
@@ -89,13 +89,13 @@ const FormTesting = () => {
         setLoading(true)
         try {
             const response = await fetch('/getAllUserMeteorites')
-            
+
             if (!response.ok) {
                 throw new Error('Failed to fetch meteoroids')
             }
 
             const data = await response.json()
-            
+
             // Mapear los datos de la BD al formato que espera el componente
             const mappedData: MeteoroidRecord[] = data.map((item: any) => ({
                 id: item.id,
@@ -289,7 +289,7 @@ const FormTesting = () => {
                         )}
                     />
 
-                    <Button type="submit">
+                    <Button type="button" variant="default" className="text-black border-black hover:bg-black hover:text-white">
                         Simulate
                     </Button>
                 </form>
