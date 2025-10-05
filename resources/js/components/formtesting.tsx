@@ -43,6 +43,8 @@ const FormTesting = () => {
     const [savedMeteoroidsData, setSavedMeteoroidsData] = useState<MeteoroidRecord[]>([])
     const [loading, setLoading] = useState(false)
     const [selectedNasaId, setSelectedNasaId] = useState<string | null>(null)
+    const [selectedNasaName, setSelectedNasaName] = useState<string | null>(null)
+    const [impactData, setImpactData] = useState<any>(null) // Datos del impacto para mostrar
 
     const form = useForm<any>({
         defaultValues: {
@@ -157,7 +159,16 @@ const FormTesting = () => {
             
             // Llamar a la API para obtener los datos del meteorito y el cráter
             const response = await axios.get(`/getMeteoriteById/${selectedNasaId}`)
-            const craterDiameter = response.data?.atmospheric_impact?.crater_diameter_m
+            const atmosphericImpact = response.data?.atmospheric_impact
+            const calculations = response.data?.calculations
+            const craterDiameter = atmosphericImpact?.crater_diameter_m
+            
+            // Guardar todos los datos del impacto
+            setImpactData({
+                name: selectedNasaName,
+                atmospheric_impact: atmosphericImpact,
+                calculations: calculations
+            })
             
             if (craterDiameter) {
                 // Calcular radio (diámetro / 2)
@@ -178,13 +189,77 @@ const FormTesting = () => {
         }
     }
 
-    return (
-        <div id="form-testing-section">
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmitSimulate)} className="space-y-4">
+    // Función para resetear la simulación
+    const resetSimulation = () => {
+        setImpactData(null)
+        setIsSimulating(false)
+        setCraterRadius(null)
+        setSelectedNasaId(null)
+        setSelectedNasaName(null)
+        form.reset()
+        toast.info('Simulation reset')
+    }
 
-                    <h1 className='text-2xl font-bold'>Simulation of Meteoroid Impact</h1>
-                    <br />
+    return (
+        <div id="form-testing-section" className="pb-6">
+            {/* Si hay datos de impacto, mostrar la información en lugar del formulario */}
+            {impactData ? (
+                <div className="space-y-4 pb-4">
+                    <h1 className='text-2xl font-bold text-black'>Impact Analysis Results</h1>
+                    <h2 className='text-xl font-semibold text-black'>{impactData.name}</h2>
+                    
+                    <div className="space-y-3 bg-white/90 p-4 rounded-lg border border-gray-300 shadow-sm">
+                        <h3 className='text-lg font-bold text-blue-600'>Meteoroid Properties</h3>
+                        <div className="grid grid-cols-2 gap-2 text-sm text-black">
+                            <div><span className="font-semibold">Diameter:</span> {impactData.calculations?.diameter_m?.toFixed(2)} m</div>
+                            <div><span className="font-semibold">Mass:</span> {impactData.calculations?.mass_kg?.toExponential(2)} kg</div>
+                            <div><span className="font-semibold">Velocity:</span> {impactData.calculations?.velocity_ms?.toFixed(2)} m/s</div>
+                            <div><span className="font-semibold">Initial Energy:</span> {impactData.calculations?.kinetic_energy_initial_megatons_tnt?.toFixed(2)} MT TNT</div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-3 bg-white/90 p-4 rounded-lg border border-gray-300 shadow-sm">
+                        <h3 className='text-lg font-bold text-red-600'>Atmospheric Effects</h3>
+                        <div className="grid grid-cols-2 gap-2 text-sm text-black">
+                            <div><span className="font-semibold">Energy Remaining:</span> {(impactData.atmospheric_impact?.f_atm * 100)?.toFixed(1)}%</div>
+                            <div><span className="font-semibold">Mass Remaining:</span> {(impactData.atmospheric_impact?.f_frag * 100)?.toFixed(1)}%</div>
+                            <div><span className="font-semibold">Total Efficiency:</span> {(impactData.atmospheric_impact?.f_total * 100)?.toFixed(1)}%</div>
+                            <div><span className="font-semibold">Fragmented:</span> {impactData.atmospheric_impact?.broke ? 'Yes' : 'No'}</div>
+                            {impactData.atmospheric_impact?.breakup_altitude_m && (
+                                <div className="col-span-2"><span className="font-semibold">Breakup Altitude:</span> {(impactData.atmospheric_impact?.breakup_altitude_m / 1000)?.toFixed(2)} km</div>
+                            )}
+                            <div><span className="font-semibold">Final Velocity:</span> {impactData.atmospheric_impact?.final_velocity_ms?.toFixed(2)} m/s</div>
+                            <div><span className="font-semibold">Energy Lost:</span> {impactData.atmospheric_impact?.energy_lost_percent?.toFixed(1)}%</div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-3 bg-white/90 p-4 rounded-lg border border-gray-300 shadow-sm">
+                        <h3 className='text-lg font-bold text-purple-600'>Impact Crater</h3>
+                        <div className="grid grid-cols-2 gap-2 text-sm text-black">
+                            <div><span className="font-semibold">Crater Diameter:</span> {impactData.atmospheric_impact?.crater_diameter_m?.toFixed(0)} m</div>
+                            <div><span className="font-semibold">Crater Radius:</span> {(impactData.atmospheric_impact?.crater_diameter_m / 2)?.toFixed(0)} m</div>
+                            <div><span className="font-semibold">Impact Energy:</span> {(impactData.atmospheric_impact?.E_after_J / 4.184e15)?.toFixed(2)} MT TNT</div>
+                        </div>
+                    </div>
+
+                    <div className="pt-2">
+                        <Button 
+                            type="button" 
+                            onClick={resetSimulation}
+                            variant="default"
+                            className="w-full text-black border-black hover:bg-black hover:text-white"
+                        >
+                            New Simulation
+                        </Button>
+                    </div>
+                </div>
+            ) : (
+                // Formulario original
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmitSimulate)} className="space-y-4">
+
+                        <h1 className='text-2xl font-bold text-black'>Simulation of Meteoroid Impact</h1>
+                        <br />
 
                     <FormField
                         control={form.control}
@@ -198,8 +273,9 @@ const FormTesting = () => {
                                             field.onChange(value)
                                             const selected = nasaMeteoroidsData.find(m => m.name === value)
                                             if (selected && selected.id) {
-                                                // Guardar el ID del meteorito seleccionado
+                                                // Guardar el ID y nombre del meteorito seleccionado
                                                 setSelectedNasaId(String(selected.id))
+                                                setSelectedNasaName(selected.name)
                                                 setSelectedMeteoriteId(String(selected.id))
                                                 toast.info(`NASA meteoroid selected: ${selected.name}`)
                                             }
@@ -331,6 +407,7 @@ const FormTesting = () => {
                     </Button>
                 </form>
             </Form>
+            )}
         </div>
     )
 }
