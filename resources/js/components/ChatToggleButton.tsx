@@ -14,7 +14,7 @@ const ChatToggleButton: React.FC<ChatToggleButtonProps> = ({ isOpen, onClick, ha
     if (isOpen) return null
 
     return (
-        <motion.div className="fixed bottom-6 right-6 z-40 group">
+        <motion.div className="fixed bottom-6 right-6 z-[1100] group">
             <motion.button
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}

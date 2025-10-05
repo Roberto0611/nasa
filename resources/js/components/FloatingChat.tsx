@@ -271,7 +271,7 @@ const FloatingChat: React.FC<FloatingChatProps> = ({ isOpen, onToggle }) => {
         <>
             {/* Overlay for preventing selection during resize/drag */}
             {(isResizing || isDragging) && (
-                <div className="fixed inset-0 z-40" style={{ cursor: isResizing ? `${resizeHandle.includes('right') ? 'e' : resizeHandle.includes('left') ? 'w' : resizeHandle.includes('bottom') ? 's' : resizeHandle.includes('top') ? 'n' : 'nw'}-resize` : 'move' }} />
+                <div className="fixed inset-0 z-[1150]" style={{ cursor: isResizing ? `${resizeHandle.includes('right') ? 'e' : resizeHandle.includes('left') ? 'w' : resizeHandle.includes('bottom') ? 's' : resizeHandle.includes('top') ? 'n' : 'nw'}-resize` : 'move' }} />
             )}
             
             <motion.div
@@ -285,7 +285,7 @@ const FloatingChat: React.FC<FloatingChatProps> = ({ isOpen, onToggle }) => {
                     top: position.y,
                     width: size.width,
                     height: size.height,
-                    zIndex: 50,
+                    zIndex: 1200,
                     userSelect: (isResizing || isDragging) ? 'none' : 'auto'
                 }}
                 className="bg-gray-900 rounded-2xl shadow-2xl border border-gray-700 flex flex-col"
