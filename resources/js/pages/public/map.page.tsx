@@ -7,7 +7,8 @@ import {
     Popup,
     Circle,
     LayersControl,
-    LayerGroup
+    LayerGroup,
+    useMap
 } from 'react-leaflet'
 import "leaflet/dist/leaflet.css"
 import L from 'leaflet'
@@ -76,10 +77,216 @@ function DraggableMarker() {
     )
 }
 
+// Componente para la animación de impacto
+function ImpactAnimation({ center, isActive }: { center: [number, number], isActive: boolean }) {
+    const map = useMap()
+    const [showFlash, setShowFlash] = useState(false)
+    const [shockwaveRadius, setShockwaveRadius] = useState(0)
+    const [particles, setParticles] = useState<Array<{ id: number, angle: number, distance: number }>>([])
+    const [countdown, setCountdown] = useState(3)
+    const [impactStarted, setImpactStarted] = useState(false)
+
+    useEffect(() => {
+        if (!isActive) return
+
+        // Countdown antes del impacto
+        let countdownInterval: NodeJS.Timeout
+        if (countdown > 0) {
+            countdownInterval = setInterval(() => {
+                setCountdown(prev => {
+                    if (prev <= 1) {
+                        clearInterval(countdownInterval)
+                        setImpactStarted(true)
+                        return 0
+                    }
+                    return prev - 1
+                })
+            }, 1000)
+        }
+
+        return () => {
+            if (countdownInterval) clearInterval(countdownInterval)
+        }
+    }, [isActive, countdown])
+
+    useEffect(() => {
+        if (!impactStarted) return
+
+        // 1. Flash inicial
+        setShowFlash(true)
+        
+        // 2. Zoom dramático al punto de impacto
+        map.flyTo(center, 13, {
+            duration: 1.5,
+            easeLinearity: 0.25
+        })
+
+        // 3. Generar partículas
+        const particleCount = 40
+        const newParticles = Array.from({ length: particleCount }, (_, i) => ({
+            id: i,
+            angle: (360 / particleCount) * i,
+            distance: 0
+        }))
+        setParticles(newParticles)
+
+        // 4. Animación de onda expansiva
+        let frame = 0
+        const maxFrames = 120
+        const animateShockwave = () => {
+            frame++
+            if (frame <= maxFrames) {
+                setShockwaveRadius(frame * 50) // Expandir 50m por frame
+                
+                // Expandir partículas
+                setParticles(prev => prev.map(p => ({
+                    ...p,
+                    distance: frame * 25 // Partículas se alejan
+                })))
+                
+                requestAnimationFrame(animateShockwave)
+            } else {
+                // Limpiar animación
+                setShockwaveRadius(0)
+                setParticles([])
+            }
+        }
+
+        // Quitar flash después de 400ms
+        setTimeout(() => setShowFlash(false), 400)
+        
+        // Iniciar animación de onda
+        setTimeout(() => requestAnimationFrame(animateShockwave), 300)
+
+        return () => {
+            setShowFlash(false)
+            setShockwaveRadius(0)
+            setParticles([])
+        }
+    }, [impactStarted, center, map])
+
+    if (!isActive) return null
+
+    return (
+        <>
+            {/* Countdown */}
+            {countdown > 0 && !impactStarted && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        zIndex: 10001,
+                        pointerEvents: 'none',
+                        fontSize: '120px',
+                        fontWeight: 'bold',
+                        color: '#ffff00',
+                        textShadow: '0 0 30px rgba(255, 255, 0, 1), 0 0 60px rgba(255, 200, 0, 0.8)',
+                        animation: 'pulse 0.5s ease-in-out infinite'
+                    }}
+                >
+                    {countdown}
+                </div>
+            )}
+
+            {/* Flash de impacto */}
+            {showFlash && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: 'rgba(255, 200, 100, 0.9)',
+                        zIndex: 9999,
+                        pointerEvents: 'none',
+                        animation: 'flash 0.4s ease-out'
+                    }}
+                />
+            )}
+
+            {/* Ondas expansivas múltiples */}
+            {shockwaveRadius > 0 && (
+                <>
+                    <Circle
+                        center={center}
+                        radius={shockwaveRadius}
+                        pathOptions={{
+                            color: '#ff6600',
+                            fillColor: 'transparent',
+                            weight: 5,
+                            opacity: Math.max(0, 1 - (shockwaveRadius / 6000))
+                        }}
+                    />
+                    <Circle
+                        center={center}
+                        radius={shockwaveRadius * 0.75}
+                        pathOptions={{
+                            color: '#ff3300',
+                            fillColor: 'transparent',
+                            weight: 4,
+                            opacity: Math.max(0, 1 - (shockwaveRadius / 6000))
+                        }}
+                    />
+                    <Circle
+                        center={center}
+                        radius={shockwaveRadius * 0.5}
+                        pathOptions={{
+                            color: '#ffff00',
+                            fillColor: 'transparent',
+                            weight: 3,
+                            opacity: Math.max(0, 1 - (shockwaveRadius / 6000))
+                        }}
+                    />
+                    <Circle
+                        center={center}
+                        radius={shockwaveRadius * 0.25}
+                        pathOptions={{
+                            color: '#ffffff',
+                            fillColor: 'transparent',
+                            weight: 2,
+                            opacity: Math.max(0, 1 - (shockwaveRadius / 6000))
+                        }}
+                    />
+                </>
+            )}
+
+            {/* Partículas/escombros */}
+            {particles.map(particle => {
+                if (particle.distance === 0) return null
+                
+                const lat = center[0] + (particle.distance * Math.cos(particle.angle * Math.PI / 180)) / 111000
+                const lng = center[1] + (particle.distance * Math.sin(particle.angle * Math.PI / 180)) / (111000 * Math.cos(center[0] * Math.PI / 180))
+                
+                return (
+                    <Circle
+                        key={particle.id}
+                        center={[lat, lng]}
+                        radius={15}
+                        pathOptions={{
+                            color: '#ff4444',
+                            fillColor: '#ff8800',
+                            fillOpacity: Math.max(0, 1 - (particle.distance / 2500)),
+                            weight: 1,
+                            opacity: Math.max(0, 0.8 - (particle.distance / 2500))
+                        }}
+                    />
+                )
+            })}
+        </>
+    )
+}
+
 
 const MapPage = () => {
     // Leer datos del contexto
     const { location, isSimulating, craterRadius } = useMeteroidContext()
+    
+    // Estado para controlar la animación (se activa una vez al inicio de isSimulating)
+    const [showAnimation, setShowAnimation] = useState(false)
+    const [hasAnimated, setHasAnimated] = useState(false)
     
     // Usar el radio del cráter del contexto o valor por defecto
     const radiusEnergy = craterRadius || 100000
@@ -95,6 +302,25 @@ const MapPage = () => {
     const impactCenter: [number, number] = Array.isArray(location) && location.length === 2
         ? [location[0], location[1]]
         : [center.lat, center.lng]
+
+    // Activar animación cuando isSimulating cambia a true
+    useEffect(() => {
+        if (isSimulating && !hasAnimated) {
+            setShowAnimation(true)
+            setHasAnimated(true)
+            
+            // Desactivar animación después de completarse
+            setTimeout(() => {
+                setShowAnimation(false)
+            }, 6000) // 6 segundos de animación total
+        }
+        
+        // Reset cuando se desactiva la simulación
+        if (!isSimulating) {
+            setShowAnimation(false)
+            setHasAnimated(false)
+        }
+    }, [isSimulating, hasAnimated])
 
     // Cuando location cambie, hacer flyTo en el mapa
     useEffect(() => {
@@ -112,7 +338,63 @@ const MapPage = () => {
     }, [location])
 
     return (
-        <div style={{ display: "flex", height: "100vh", width: "100%" }}>
+        <div style={{ display: "flex", height: "100vh", width: "100%", position: "relative" }}>
+            {/* Estilos CSS para la animación de flash */}
+            <style>
+                {`
+                    @keyframes flash {
+                        0% { opacity: 0; }
+                        50% { opacity: 1; }
+                        100% { opacity: 0; }
+                    }
+                    
+                    @keyframes shake {
+                        0%, 100% { transform: translate(0, 0); }
+                        10%, 30%, 50%, 70%, 90% { transform: translate(-5px, 5px); }
+                        20%, 40%, 60%, 80% { transform: translate(5px, -5px); }
+                    }
+                    
+                    @keyframes pulse {
+                        0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                        50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.7; }
+                    }
+                    
+                    @keyframes slideDown {
+                        0% { transform: translate(-50%, -200%); opacity: 0; }
+                        100% { transform: translate(-50%, -50%); opacity: 1; }
+                    }
+                `}
+            </style>
+
+            {/* Overlay de alerta de impacto */}
+            {showAnimation && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: '20%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        zIndex: 10000,
+                        pointerEvents: 'none',
+                        animation: 'slideDown 1s ease-out, shake 0.5s ease-in-out 1s',
+                        fontSize: '42px',
+                        fontWeight: 'bold',
+                        color: '#ff0000',
+                        textShadow: '0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 100, 0, 0.6)',
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        padding: '20px 40px',
+                        borderRadius: '10px',
+                        border: '3px solid #ff0000',
+                        textAlign: 'center'
+                    }}
+                >
+                    ⚠️ METEORITE IMPACT ⚠️
+                    <div style={{ fontSize: '18px', marginTop: '10px', color: '#ffff00' }}>
+                        INITIATING SIMULATION
+                    </div>
+                </div>
+            )}
+
             <MapContainer
                 center={[26.915093, -101.430703]}
                 zoom={13}
@@ -123,6 +405,9 @@ const MapPage = () => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                     url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
                 />
+
+                {/* Animación de impacto */}
+                <ImpactAnimation center={impactCenter} isActive={showAnimation} />
 
                 {/* Solo mostrar círculos de impacto si isSimulating es true */}
                 {isSimulating && (

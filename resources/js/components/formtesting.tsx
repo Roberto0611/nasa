@@ -44,6 +44,8 @@ const FormTesting = () => {
     const [loading, setLoading] = useState(false)
     const [selectedNasaId, setSelectedNasaId] = useState<string | null>(null)
     const [selectedNasaName, setSelectedNasaName] = useState<string | null>(null)
+    const [selectedSavedId, setSelectedSavedId] = useState<string | null>(null)
+    const [selectedSavedName, setSelectedSavedName] = useState<string | null>(null)
     const [impactData, setImpactData] = useState<any>(null) // Datos del impacto para mostrar
 
     const form = useForm<any>({
@@ -149,23 +151,34 @@ const FormTesting = () => {
     const onSubmitSimulate = async (data: any) => {
         console.log("Simulating meteoroid impact with data:", data)
         
-        if (!selectedNasaId) {
-            toast.error('Please select a NASA meteoroid first')
+        // Verificar que se haya seleccionado un meteorito (NASA o guardado)
+        if (!selectedNasaId && !selectedSavedId) {
+            toast.error('Please select a meteoroid first')
             return
         }
 
         try {
             toast.info('Calculating impact area...')
             
-            // Llamar a la API para obtener los datos del meteorito y el cráter
-            const response = await axios.get(`/getMeteoriteById/${selectedNasaId}`)
+            let response
+            let meteoroidName
+            
+            // Llamar a la API correspondiente según el tipo seleccionado
+            if (selectedNasaId) {
+                response = await axios.get(`/getMeteoriteById/${selectedNasaId}`)
+                meteoroidName = selectedNasaName
+            } else {
+                response = await axios.get(`/getUserMeteoriteById/${selectedSavedId}`)
+                meteoroidName = selectedSavedName
+            }
+            
             const atmosphericImpact = response.data?.atmospheric_impact
             const calculations = response.data?.calculations
             const craterDiameter = atmosphericImpact?.crater_diameter_m
             
             // Guardar todos los datos del impacto
             setImpactData({
-                name: selectedNasaName,
+                name: meteoroidName,
                 atmospheric_impact: atmosphericImpact,
                 calculations: calculations
             })
@@ -196,6 +209,8 @@ const FormTesting = () => {
         setCraterRadius(null)
         setSelectedNasaId(null)
         setSelectedNasaName(null)
+        setSelectedSavedId(null)
+        setSelectedSavedName(null)
         form.reset()
         toast.info('Simulation reset')
     }
@@ -277,13 +292,18 @@ const FormTesting = () => {
                                                 setSelectedNasaId(String(selected.id))
                                                 setSelectedNasaName(selected.name)
                                                 setSelectedMeteoriteId(String(selected.id))
+                                                // Limpiar selección de meteoritos guardados
+                                                setSelectedSavedId(null)
+                                                setSelectedSavedName(null)
+                                                form.setValue('selectedSavedMeteoroid', undefined)
                                                 toast.info(`NASA meteoroid selected: ${selected.name}`)
                                             }
                                         }}
                                         defaultValue={field.value}
+                                        disabled={!!selectedSavedId || loading}
                                     >
                                         <SelectTrigger className="w-[180px]">
-                                            <SelectValue placeholder={loading ? "Loading..." : "Select NASA meteoroid"} />
+                                            <SelectValue placeholder={loading ? "Loading..." : selectedSavedId ? "Disabled - Saved selected" : "Select NASA meteoroid"} />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {nasaMeteoroidsData.length === 0 ? (
@@ -320,16 +340,26 @@ const FormTesting = () => {
                                             field.onChange(value)
                                             const selected = savedMeteoroidsData.find(m => m.name === value)
                                             if (selected) {
+                                                // Guardar el ID y nombre del meteorito guardado
+                                                setSelectedSavedId(String(selected.id))
+                                                setSelectedSavedName(selected.name)
+                                                // Limpiar selección de NASA
+                                                setSelectedNasaId(null)
+                                                setSelectedNasaName(null)
+                                                form.setValue('selectedNasaMeteoroid', undefined)
+                                                
                                                 loadMeteoroidData(selected)
                                                 if (selected.lat && selected.lng) {
                                                     setMapLocation(selected.lat, selected.lng)
                                                 }
+                                                toast.info(`Saved meteoroid selected: ${selected.name}`)
                                             }
                                         }}
                                         defaultValue={field.value}
+                                        disabled={!!selectedNasaId || loading}
                                     >
                                         <SelectTrigger className="w-[180px]">
-                                            <SelectValue placeholder={loading ? "Loading..." : "Select saved meteoroid"} />
+                                            <SelectValue placeholder={loading ? "Loading..." : selectedNasaId ? "Disabled - NASA selected" : "Select saved meteoroid"} />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {savedMeteoroidsData.length === 0 ? (
@@ -401,7 +431,7 @@ const FormTesting = () => {
                         onClick={form.handleSubmit(onSubmitSimulate)}
                         variant="default" 
                         className="text-black border-black hover:bg-black hover:text-white"
-                        disabled={!selectedNasaId}
+                        disabled={!selectedNasaId && !selectedSavedId}
                     >
                         Simulate
                     </Button>

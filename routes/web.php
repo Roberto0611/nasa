@@ -33,6 +33,7 @@ Route::get('getMeteoritesNames', action: [MeteoriteController::class, 'getMeteor
 // meteoritos user
 Route::post('meteorites/store', [MeteoriteController::class, 'store'])->name('meteorites.store');
 Route::get('getAllUserMeteorites', [MeteoriteController::class, 'getAllUserMeteorites']);
+Route::get('getUserMeteoriteById/{id}', [MeteoriteController::class, 'getUserMeteoriteById']);
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

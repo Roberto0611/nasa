@@ -345,7 +345,9 @@ class MeteoriteController extends Controller
 
         // estimación de cráter (modelo grosero - escala empírica)
         $crater_energy_J = $E_remain; // energía que impacta el suelo
-        $crater_diameter_m = null;
+        // Modelo más realista basado en Melosh (Earth Impact Effects)
+        $E_mt = $crater_energy_J / 4.184e15;
+        $crater_diameter_m = 0.07 * pow($E_mt, 0.333) * 1000; // salida en metros
         if ($h <= 0 && $crater_energy_J > 1e12) { // si impacta
             // Estimación empírica realista (Melosh/Holsapple)
             // Escala: 1e24 J ≈ 180 km de diámetro (Chicxulub)
@@ -397,5 +399,88 @@ class MeteoriteController extends Controller
     {
         $meteorites = meteoritos::all();
         return response()->json($meteorites);
+    }
+
+    public function getUserMeteoriteById($id)
+    {
+        $meteorite = meteoritos::find($id);
+        if (!$meteorite) {
+            return response()->json(['error' => 'Meteorito no encontrado'], 404);
+        }
+
+        // --- Extraer datos del meteorito del usuario ---
+        $radius = floatval($meteorite->radius); // radio en metros
+        $diameter = $radius * 2.0;
+        $vel_km_s = floatval($meteorite->velocity); // velocidad en km/s
+        $v0 = $vel_km_s; // ya esta en m/s
+        $theta_deg = floatval($meteorite->entry_angle); // ángulo de entrada en grados
+        $material = $meteorite->material; // string: 'rock', 'iron', 'nickel', etc.
+
+        // --- Mapear material a densidad (kg/m³) ---
+        $materialDensities = [
+            'rock' => 2700,
+            'iron' => 7800,
+            'nickel' => 8900,
+            'rubble' => 2000,
+            'ice' => 917
+        ];
+        $rho_obj = $materialDensities[strtolower($material)] ?? 2700; // por defecto rock
+
+        // --- Mapear material a resistencia (Pa) ---
+        $materialStrengths = [
+            'rock' => 1e7,
+            'iron' => 1e8,
+            'nickel' => 1e8,
+            'rubble' => 1e5,
+            'ice' => 1e6
+        ];
+        $strength = $materialStrengths[strtolower($material)] ?? 1e7; // por defecto rock
+
+        // --- Calcular volumen y masa (esfera equivalente) ---
+        $volume = (4.0/3.0) * pi() * pow($radius, 3);
+        $mass = $rho_obj * $volume;
+
+        // --- Energía cinética inicial ---
+        $kineticEnergy = 0.5 * $mass * pow($v0, 2);
+
+        // --- Parámetros atmosféricos por defecto ---
+        $C_d = floatval(request()->input('drag_coefficient', 1.0));
+        $rho0 = floatval(request()->input('atm_density_sea_level', 1.225));
+        $H = floatval(request()->input('scale_height', 8000.0));
+
+        // --- Ejecutar simulación atmosférica ---
+        $atmosphericResults = $this->estimateAtmosphericEffects(
+            $diameter,
+            $rho_obj,
+            $v0,
+            $theta_deg,
+            $strength,
+            $C_d,
+            $rho0,
+            $H
+        );
+
+        return response()->json([
+            'data' => $meteorite,
+            'calculations' => [
+                'diameter_m' => $diameter,
+                'radius_m' => $radius,
+                'volume_m3' => $volume,
+                'mass_kg' => $mass,
+                'velocity_ms' => $v0,
+                'kinetic_energy_initial_J' => $kineticEnergy,
+                'kinetic_energy_initial_megatons_tnt' => $kineticEnergy / 4.184e15,
+                'material_density_kg_m3' => $rho_obj,
+                'material_strength_Pa' => $strength
+            ],
+            'atmospheric_impact' => $atmosphericResults,
+            'parameters_used' => [
+                'entry_angle_deg' => $theta_deg,
+                'material_strength_Pa' => $strength,
+                'drag_coefficient' => $C_d,
+                'material_density_kg_m3' => $rho_obj,
+                'velocity_km_s' => $vel_km_s
+            ]
+        ]);
     }
 }
