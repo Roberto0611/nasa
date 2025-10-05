@@ -23,6 +23,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "./select"
+import { Share2, MessageCircle, Instagram, Twitter, Facebook } from 'lucide-react'
 
 type MeteoroidRecord = {
     id?: number
@@ -47,6 +48,8 @@ const FormTesting = () => {
     const [selectedSavedId, setSelectedSavedId] = useState<string | null>(null)
     const [selectedSavedName, setSelectedSavedName] = useState<string | null>(null)
     const [impactData, setImpactData] = useState<any>(null) // Datos del impacto para mostrar
+    const [showShareButtons, setShowShareButtons] = useState(false)
+    const [showInstagramGuide, setShowInstagramGuide] = useState(false)
 
     const form = useForm<any>({
         defaultValues: {
@@ -211,8 +214,419 @@ const FormTesting = () => {
         setSelectedNasaName(null)
         setSelectedSavedId(null)
         setSelectedSavedName(null)
+        setShowShareButtons(false)
+        setShowInstagramGuide(false)
         form.reset()
         toast.info('Simulation reset')
+    }
+
+    // Función para generar imagen profesional con Canvas API
+    const generateProfessionalImage = async (): Promise<Blob | null> => {
+        if (!impactData) return null
+        
+        return new Promise((resolve) => {
+            const canvas = document.createElement('canvas')
+            canvas.width = 1200
+            canvas.height = 1200
+            const ctx = canvas.getContext('2d')
+            
+            if (!ctx) {
+                resolve(null)
+                return
+            }
+
+            // Fondo con gradiente espacial
+            const gradient = ctx.createLinearGradient(0, 0, 0, 1200)
+            gradient.addColorStop(0, '#0f172a')
+            gradient.addColorStop(0.5, '#1e293b')
+            gradient.addColorStop(1, '#0c0a1f')
+            ctx.fillStyle = gradient
+            ctx.fillRect(0, 0, 1200, 1200)
+
+            // Estrellas en el fondo
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'
+            for (let i = 0; i < 100; i++) {
+                const x = Math.random() * 1200
+                const y = Math.random() * 400
+                const radius = Math.random() * 1.5
+                ctx.beginPath()
+                ctx.arc(x, y, radius, 0, Math.PI * 2)
+                ctx.fill()
+            }
+
+            // Logo NASA (texto estilizado)
+            ctx.font = 'bold 60px Arial'
+            ctx.fillStyle = '#3b82f6'
+            ctx.fillText('NASA', 50, 80)
+            
+            ctx.font = '30px Arial'
+            ctx.fillStyle = '#94a3b8'
+            ctx.fillText('Meteorite Impact Simulator', 50, 120)
+
+            // Línea decorativa
+            ctx.strokeStyle = '#3b82f6'
+            ctx.lineWidth = 3
+            ctx.beginPath()
+            ctx.moveTo(50, 140)
+            ctx.lineTo(1150, 140)
+            ctx.stroke()
+
+            // Título del meteorito
+            ctx.font = 'bold 48px Arial'
+            ctx.fillStyle = '#fbbf24'
+            ctx.fillText(impactData.name, 50, 210)
+
+            // Fecha y hora
+            const now = new Date()
+            ctx.font = '20px Arial'
+            ctx.fillStyle = '#94a3b8'
+            ctx.fillText(`Simulation Date: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`, 50, 250)
+
+            // Panel principal con datos
+            let yPos = 320
+
+            // SECCIÓN 1: Propiedades del Meteorito
+            ctx.fillStyle = 'rgba(59, 130, 246, 0.2)'
+            ctx.fillRect(50, yPos, 1100, 200)
+            
+            ctx.fillStyle = '#3b82f6'
+            ctx.font = 'bold 32px Arial'
+            ctx.fillText('⚡ METEOROID PROPERTIES', 70, yPos + 40)
+
+            ctx.fillStyle = '#ffffff'
+            ctx.font = '24px Arial'
+            const diameter = impactData.calculations?.diameter_m?.toFixed(2) || 'N/A'
+            const mass = impactData.calculations?.mass_kg?.toExponential(2) || 'N/A'
+            const velocity = impactData.calculations?.velocity_ms?.toFixed(2) || 'N/A'
+            const energy = impactData.calculations?.kinetic_energy_initial_megatons_tnt?.toFixed(2) || 'N/A'
+
+            ctx.fillText(`Diameter: ${diameter} m`, 70, yPos + 90)
+            ctx.fillText(`Velocity: ${velocity} m/s`, 70, yPos + 130)
+            ctx.fillText(`Mass: ${mass} kg`, 650, yPos + 90)
+            ctx.fillText(`Energy: ${energy} MT TNT`, 650, yPos + 130)
+
+            // Barra de energía visual
+            const energyBarWidth = Math.min(parseFloat(energy) * 50, 500)
+            ctx.fillStyle = '#ef4444'
+            ctx.fillRect(70, yPos + 160, energyBarWidth, 20)
+            ctx.strokeStyle = '#ffffff'
+            ctx.strokeRect(70, yPos + 160, 500, 20)
+
+            yPos += 230
+
+            // SECCIÓN 2: Efectos Atmosféricos
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.2)'
+            ctx.fillRect(50, yPos, 1100, 200)
+            
+            ctx.fillStyle = '#ef4444'
+            ctx.font = 'bold 32px Arial'
+            ctx.fillText('🔥 ATMOSPHERIC EFFECTS', 70, yPos + 40)
+
+            ctx.fillStyle = '#ffffff'
+            ctx.font = '24px Arial'
+            const energyRemaining = ((impactData.atmospheric_impact?.f_atm || 0) * 100).toFixed(1)
+            const massRemaining = ((impactData.atmospheric_impact?.f_frag || 0) * 100).toFixed(1)
+            const fragmented = impactData.atmospheric_impact?.broke ? 'YES' : 'NO'
+            const breakupAlt = impactData.atmospheric_impact?.breakup_altitude_m 
+                ? (impactData.atmospheric_impact.breakup_altitude_m / 1000).toFixed(2) + ' km'
+                : 'N/A'
+
+            ctx.fillText(`Energy Remaining: ${energyRemaining}%`, 70, yPos + 90)
+            ctx.fillText(`Fragmented: ${fragmented}`, 70, yPos + 130)
+            ctx.fillText(`Mass Remaining: ${massRemaining}%`, 650, yPos + 90)
+            ctx.fillText(`Breakup Altitude: ${breakupAlt}`, 650, yPos + 130)
+
+            // Gráfico circular de energía
+            const centerX = 950
+            const centerY = yPos + 110
+            const radius = 60
+            const energyPercent = parseFloat(energyRemaining) / 100
+            
+            // Fondo del círculo
+            ctx.beginPath()
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2)
+            ctx.fillStyle = 'rgba(100, 100, 100, 0.3)'
+            ctx.fill()
+            
+            // Porcentaje de energía
+            ctx.beginPath()
+            ctx.moveTo(centerX, centerY)
+            ctx.arc(centerX, centerY, radius, -Math.PI / 2, -Math.PI / 2 + (Math.PI * 2 * energyPercent))
+            ctx.closePath()
+            ctx.fillStyle = '#22c55e'
+            ctx.fill()
+            
+            // Texto del porcentaje
+            ctx.fillStyle = '#ffffff'
+            ctx.font = 'bold 20px Arial'
+            ctx.textAlign = 'center'
+            ctx.fillText(`${energyRemaining}%`, centerX, centerY + 7)
+            ctx.textAlign = 'left'
+
+            yPos += 230
+
+            // SECCIÓN 3: Cráter de Impacto
+            ctx.fillStyle = 'rgba(168, 85, 247, 0.2)'
+            ctx.fillRect(50, yPos, 1100, 250)
+            
+            ctx.fillStyle = '#a855f7'
+            ctx.font = 'bold 32px Arial'
+            ctx.fillText('💥 IMPACT CRATER', 70, yPos + 40)
+
+            const craterDiameter = impactData.atmospheric_impact?.crater_diameter_m?.toFixed(0) || 'N/A'
+            const craterRadius = impactData.atmospheric_impact?.crater_diameter_m 
+                ? (impactData.atmospheric_impact.crater_diameter_m / 2).toFixed(0)
+                : 'N/A'
+            const impactEnergy = (impactData.atmospheric_impact?.E_after_J / 4.184e15)?.toFixed(2) || 'N/A'
+
+            ctx.fillStyle = '#ffffff'
+            ctx.font = 'bold 40px Arial'
+            ctx.fillText(`${craterDiameter} m`, 70, yPos + 120)
+            ctx.font = '22px Arial'
+            ctx.fillText('Crater Diameter', 70, yPos + 150)
+
+            ctx.font = 'bold 40px Arial'
+            ctx.fillText(`${impactEnergy} MT`, 450, yPos + 120)
+            ctx.font = '22px Arial'
+            ctx.fillText('Impact Energy (TNT Equivalent)', 450, yPos + 150)
+
+            // Visualización del cráter
+            const craterCenterX = 950
+            const craterCenterY = yPos + 140
+            const craterVisualRadius = 80
+            
+            // Cráter visual
+            const craterGradient = ctx.createRadialGradient(craterCenterX, craterCenterY, 0, craterCenterX, craterCenterY, craterVisualRadius)
+            craterGradient.addColorStop(0, '#7c3aed')
+            craterGradient.addColorStop(0.5, '#a855f7')
+            craterGradient.addColorStop(1, '#1e293b')
+            ctx.fillStyle = craterGradient
+            ctx.beginPath()
+            ctx.arc(craterCenterX, craterCenterY, craterVisualRadius, 0, Math.PI * 2)
+            ctx.fill()
+
+            // Ondas de choque
+            for (let i = 1; i <= 3; i++) {
+                ctx.strokeStyle = `rgba(239, 68, 68, ${0.5 / i})`
+                ctx.lineWidth = 3
+                ctx.beginPath()
+                ctx.arc(craterCenterX, craterCenterY, craterVisualRadius + (i * 20), 0, Math.PI * 2)
+                ctx.stroke()
+            }
+
+            yPos += 270
+
+            // Footer
+            ctx.fillStyle = '#3b82f6'
+            ctx.fillRect(50, yPos, 1100, 3)
+            
+            ctx.font = '20px Arial'
+            ctx.fillStyle = '#94a3b8'
+            ctx.fillText('Generated by NASA Meteorite Impact Simulator', 50, yPos + 35)
+            ctx.fillText('#NASA #SpaceApps #MeteoriteImpact', 50, yPos + 65)
+
+            // Emoji decorativo
+            ctx.font = '50px Arial'
+            ctx.fillText('🌍💥🚀', 950, yPos + 50)
+
+            // Convertir a blob
+            canvas.toBlob((blob) => {
+                resolve(blob)
+            }, 'image/png', 1.0)
+        })
+    }
+
+    // Función mejorada para compartir con imagen
+    const shareToWhatsApp = async () => {
+        const imageBlob = await generateProfessionalImage()
+        if (!imageBlob) {
+            toast.error('Error generating image')
+            return
+        }
+
+        // Crear archivo
+        const file = new File([imageBlob], 'meteorite-impact.png', { type: 'image/png' })
+        
+        // Crear texto enriquecido
+        const text = `🚀 NASA METEORITE IMPACT SIMULATION 💥
+
+📍 Meteoroid: ${impactData.name}
+💥 Crater Diameter: ${impactData.atmospheric_impact?.crater_diameter_m?.toFixed(0)}m
+⚡ Energy: ${impactData.calculations?.kinetic_energy_initial_megatons_tnt?.toFixed(2)} Megatons TNT
+🔥 Fragmented: ${impactData.atmospheric_impact?.broke ? 'YES' : 'NO'}
+
+Simulated with NASA Space Apps Challenge
+#NASA #SpaceApps #MeteoriteImpact #Science`
+
+        // Intentar usar Web Share API si está disponible
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+                await navigator.share({
+                    files: [file],
+                    title: 'NASA Meteorite Impact Simulation',
+                    text: text
+                })
+                toast.success('Shared successfully!')
+                return
+            } catch (error) {
+                console.log('Web Share API failed, using fallback')
+            }
+        }
+
+        // Fallback: descargar imagen y abrir WhatsApp con texto
+        const url = URL.createObjectURL(imageBlob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `nasa-impact-${impactData.name.replace(/\s+/g, '-')}.png`
+        link.click()
+        URL.revokeObjectURL(url)
+        
+        setTimeout(() => {
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`
+            window.open(whatsappUrl, '_blank')
+        }, 500)
+        
+        toast.success('Image downloaded! Opening WhatsApp...')
+    }
+
+    const shareToTwitter = async () => {
+        const imageBlob = await generateProfessionalImage()
+        if (!imageBlob) {
+            toast.error('Error generating image')
+            return
+        }
+
+        // Descargar imagen primero
+        const url = URL.createObjectURL(imageBlob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `nasa-impact-${impactData.name.replace(/\s+/g, '-')}.png`
+        link.click()
+        URL.revokeObjectURL(url)
+
+        const text = `🚀 Just simulated a meteorite impact with NASA!
+
+💥 ${impactData.name}
+🎯 Crater: ${impactData.atmospheric_impact?.crater_diameter_m?.toFixed(0)}m
+⚡ Energy: ${impactData.calculations?.kinetic_energy_initial_megatons_tnt?.toFixed(2)} MT TNT
+
+#NASA #SpaceApps #MeteoriteImpact #SpaceScience`
+
+        setTimeout(() => {
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`
+            window.open(twitterUrl, '_blank')
+        }, 500)
+        
+        toast.success('Image downloaded! Opening Twitter...')
+    }
+
+    const shareToInstagram = async () => {
+        const imageBlob = await generateProfessionalImage()
+        if (!imageBlob) {
+            toast.error('Error generating image')
+            return
+        }
+
+        // Descargar imagen
+        const url = URL.createObjectURL(imageBlob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `nasa-impact-${impactData.name.replace(/\s+/g, '-')}.png`
+        link.click()
+        URL.revokeObjectURL(url)
+
+        const caption = `🚀 NASA METEORITE IMPACT SIMULATION 💥
+
+📍 Meteoroid: ${impactData.name}
+💥 Crater Diameter: ${impactData.atmospheric_impact?.crater_diameter_m?.toFixed(0)}m diameter
+⚡ Energy: ${impactData.calculations?.kinetic_energy_initial_megatons_tnt?.toFixed(2)} Megatons TNT
+🔥 Atmospheric Fragmentation: ${impactData.atmospheric_impact?.broke ? 'YES' : 'NO'}
+
+Simulated with NASA Space Apps Challenge Meteorite Impact Simulator 🌍
+
+#NASA #SpaceApps #MeteoriteImpact #SpaceScience #Astronomy #ScienceIsAwesome`
+
+        // Copiar caption al portapapeles
+        try {
+            await navigator.clipboard.writeText(caption)
+            
+            // Mostrar guía visual
+            setShowInstagramGuide(true)
+            
+            toast.success('✅ Image downloaded & caption copied!', {
+                duration: 6000
+            })
+            
+            // Intentar abrir Instagram
+            setTimeout(() => {
+                if (/Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                    // Móvil: intentar abrir app
+                    window.location.href = 'instagram://camera'
+                    setTimeout(() => {
+                        window.open('https://www.instagram.com/', '_blank')
+                    }, 1500)
+                } else {
+                    // Desktop: abrir web
+                    window.open('https://www.instagram.com/', '_blank')
+                }
+            }, 1000)
+            
+        } catch (error) {
+            toast.error('Failed to copy caption')
+        }
+    }
+
+    const shareToFacebook = async () => {
+        const imageBlob = await generateProfessionalImage()
+        if (!imageBlob) {
+            toast.error('Error generating image')
+            return
+        }
+
+        // Descargar imagen
+        const url = URL.createObjectURL(imageBlob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `nasa-impact-${impactData.name.replace(/\s+/g, '-')}.png`
+        link.click()
+        URL.revokeObjectURL(url)
+
+        const text = `🚀 NASA METEORITE IMPACT SIMULATION 💥
+
+I just simulated a meteorite impact using NASA's data!
+
+📍 Meteoroid: ${impactData.name}
+💥 Crater Diameter: ${impactData.atmospheric_impact?.crater_diameter_m?.toFixed(0)} meters
+⚡ Energy Released: ${impactData.calculations?.kinetic_energy_initial_megatons_tnt?.toFixed(2)} Megatons of TNT
+🔥 Atmospheric Fragmentation: ${impactData.atmospheric_impact?.broke ? 'YES' : 'NO'}
+
+This was created for NASA Space Apps Challenge using real NASA NEO data!
+
+#NASA #SpaceApps #MeteoriteImpact #SpaceScience`
+
+        setTimeout(() => {
+            const fbUrl = `https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(text)}`
+            window.open(fbUrl, '_blank')
+        }, 500)
+        
+        toast.success('Image downloaded! Opening Facebook...')
+    }
+
+    const downloadImage = async () => {
+        const imageBlob = await generateProfessionalImage()
+        if (!imageBlob) {
+            toast.error('Error generating image')
+            return
+        }
+
+        const url = URL.createObjectURL(imageBlob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `nasa-meteorite-impact-${impactData.name.replace(/\s+/g, '-')}-${Date.now()}.png`
+        link.click()
+        URL.revokeObjectURL(url)
+        
+        toast.success('Professional impact card downloaded! 🎨')
     }
 
     return (
@@ -257,14 +671,143 @@ const FormTesting = () => {
                         </div>
                     </div>
 
-                    <div className="pt-2">
+                    {/* Botones de acción mejorados */}
+                    <div className="space-y-3 pt-2">
+                        {/* Botón principal de compartir */}
+                        <Button 
+                            type="button" 
+                            onClick={() => setShowShareButtons(!showShareButtons)}
+                            variant="outline"
+                            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0 hover:from-blue-700 hover:to-purple-700 flex items-center justify-center gap-2 py-6 text-lg font-bold"
+                        >
+                            <Share2 size={24} />
+                            {showShareButtons ? 'Hide Share Options' : '✨ Share Your Impact Simulation'}
+                        </Button>
+
+                        {/* Opciones de compartir con animación */}
+                        {showShareButtons && (
+                            <div className="space-y-2 animate-in slide-in-from-top duration-300">
+                                <div className="bg-gradient-to-r from-slate-800 to-slate-900 p-4 rounded-lg border-2 border-blue-500">
+                                    <p className="text-white text-sm mb-3 font-semibold">
+                                        📸 Your simulation will be converted to a professional NASA-style image card!
+                                    </p>
+                                    
+                                    <div className="grid grid-cols-2 gap-2 mb-3">
+                                        <Button 
+                                            type="button"
+                                            onClick={shareToWhatsApp}
+                                            className="bg-green-500 hover:bg-green-600 text-white flex items-center justify-center gap-2 py-4"
+                                        >
+                                            <MessageCircle size={20} />
+                                            WhatsApp
+                                        </Button>
+                                        
+                                        <Button 
+                                            type="button"
+                                            onClick={shareToInstagram}
+                                            className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 text-white flex items-center justify-center gap-2 py-4"
+                                        >
+                                            <Instagram size={20} />
+                                            Instagram
+                                        </Button>
+                                        
+                                        <Button 
+                                            type="button"
+                                            onClick={shareToTwitter}
+                                            className="bg-black hover:bg-gray-800 text-white flex items-center justify-center gap-2 py-4"
+                                        >
+                                            <Twitter size={20} />
+                                            Twitter/X
+                                        </Button>
+                                        
+                                        <Button 
+                                            type="button"
+                                            onClick={shareToFacebook}
+                                            className="bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2 py-4"
+                                        >
+                                            <Facebook size={20} />
+                                            Facebook
+                                        </Button>
+                                    </div>
+                                    
+                                    <Button 
+                                        type="button"
+                                        onClick={downloadImage}
+                                        variant="outline"
+                                        className="w-full bg-purple-600 hover:bg-purple-700 text-white border-0 font-bold py-4"
+                                    >
+                                        🎨 Download Professional Impact Card
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Guía visual de Instagram */}
+                        {showInstagramGuide && (
+                            <div className="bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 p-6 rounded-lg shadow-2xl animate-in slide-in-from-bottom border-4 border-white">
+                                <div className="flex justify-between items-start mb-4">
+                                    <h3 className="text-white font-bold text-xl flex items-center gap-2">
+                                        <Instagram size={28} />
+                                        How to Post on Instagram
+                                    </h3>
+                                    <button 
+                                        onClick={() => setShowInstagramGuide(false)}
+                                        className="text-white hover:text-gray-200 text-2xl font-bold"
+                                    >
+                                        ✕
+                                    </button>
+                                </div>
+                                
+                                <div className="space-y-3 text-white">
+                                    <div className="flex items-start gap-3 bg-white/20 p-3 rounded-lg backdrop-blur">
+                                        <span className="text-2xl font-bold bg-white text-purple-600 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">1</span>
+                                        <div>
+                                            <p className="font-semibold">Image Downloaded ✅</p>
+                                            <p className="text-sm">Check your Downloads folder for the NASA impact card</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="flex items-start gap-3 bg-white/20 p-3 rounded-lg backdrop-blur">
+                                        <span className="text-2xl font-bold bg-white text-pink-600 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">2</span>
+                                        <div>
+                                            <p className="font-semibold">Caption Copied 📋</p>
+                                            <p className="text-sm">Your caption is ready in the clipboard</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="flex items-start gap-3 bg-white/20 p-3 rounded-lg backdrop-blur">
+                                        <span className="text-2xl font-bold bg-white text-orange-600 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">3</span>
+                                        <div>
+                                            <p className="font-semibold">Open Instagram 📱</p>
+                                            <p className="text-sm">Tap the + button to create a new post</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="flex items-start gap-3 bg-white/20 p-3 rounded-lg backdrop-blur">
+                                        <span className="text-2xl font-bold bg-white text-purple-600 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">4</span>
+                                        <div>
+                                            <p className="font-semibold">Upload & Paste 🚀</p>
+                                            <p className="text-sm">Select your downloaded image, then paste the caption (long press on caption field)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="mt-4 bg-white/30 p-3 rounded-lg backdrop-blur">
+                                    <p className="text-white text-sm font-semibold text-center">
+                                        💡 Pro tip: Tag @nasa and use #SpaceApps for maximum visibility!
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Botón de nueva simulación */}
                         <Button 
                             type="button" 
                             onClick={resetSimulation}
                             variant="default"
-                            className="w-full text-black border-black hover:bg-black hover:text-white"
+                            className="w-full text-black border-black hover:bg-black hover:text-white py-4"
                         >
-                            New Simulation
+                            🔄 New Simulation
                         </Button>
                     </div>
                 </div>
