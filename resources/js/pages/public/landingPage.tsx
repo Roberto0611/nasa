@@ -26,7 +26,7 @@ const LandingPage = () => {
                 <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                     <div className="flex items-center space-x-3">
                         <img src="/meteorica.png" alt="Meteorica Logo" className="h-24 w-auto" />
-                        <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">Meteorica</span>
+                        <span className="text-2xl font-bold">Meteorica</span>
                     </div>
                     <ul className="hidden md:flex space-x-8">
                         <li><a href="#home" className="hover:text-gray-300 transition">Home</a></li>
